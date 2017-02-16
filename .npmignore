@@ -1,0 +1,11 @@
+downloads
+misc
+node_modules
+test
+tools
+.idea
+component.json
+gulpfile.js
+.npmignore
+.gitignore
+npm-debug.log

@@ -1,0 +1,63 @@
+{
+  "name": "@convergence/jointjs-utils",
+  "version": "1.0.0",
+  "description": "A utility to bind a Convergence Model to a JointJS Graph",
+  "keywords": [
+    "Convergence",
+    "JointJS"
+  ],
+  "main": "lib/index.js",
+  "browser": "browser/convergence-jointjs-utils.js",
+  "homepage": "http://convergencelabs.com",
+  "bugs": "https://github.com/convergencelabs/jointjs-utils/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Convergence Labs, Inc.",
+    "email": "info@convergencelabs.com",
+    "url": "http://convergencelabs.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/convergencelabs/jointjs-utils.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "scripts": {
+    "dist": "gulp dist",
+    "build": "gulp build",
+    "clean": "gulp clean"
+  },
+  "dependencies": {
+    "@convergence/color-assigner": "0.1.1",
+    "@convergence/convergence": "1.0.0-alpha.1",
+    "jointjs": "1.0.3"
+  },
+  "devDependencies": {
+    "@types/core-js": "0.9.35",
+    "awesome-typescript-loader": "3.0.4-rc.2",
+    "babel-core": "6.23.1",
+    "babel-loader": "6.3.0",
+    "babel-preset-es2015": "6.22.0",
+    "babel-preset-stage-0": "6.22.0",
+    "del": "2.2.2",
+    "gulp": "3.9.1",
+    "gulp-babel": "6.1.2",
+    "gulp-bump": "2.5.1",
+    "gulp-concat": "2.6.1",
+    "gulp-header": "1.8.8",
+    "gulp-notify": "2.2.0",
+    "gulp-plumber": "1.1.0",
+    "gulp-rename": "1.2.2",
+    "gulp-sass": "3.0.0",
+    "gulp-sourcemaps": "1.9.1",
+    "gulp-typescript": "3.1.3",
+    "gulp-uglify": "2.0.1",
+    "gulp-util": "3.0.8",
+    "gulp-webpack": "1.5.0",
+    "typescript": "2.1.6",
+    "webpack": "2.2.1",
+    "webpack-stream": "3.2.0"
+  }
+}

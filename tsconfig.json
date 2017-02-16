@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "preserveConstEnums": true,
+    "outDir": "build",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true
+  },
+  "include": [
+    "src/ts/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "example"
+  ]
+}
