@@ -4,10 +4,10 @@ This project contains utilities to that make integrating JointJS / Rappid with C
 
 # Building the Distribution
 
-'''
+```
 npm install
 npm run dist
-'''
+```
 
 # Example
 To run the example you must first:
