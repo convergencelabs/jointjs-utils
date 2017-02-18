@@ -34,8 +34,22 @@ const paper = new joint.dia.Paper({
     }
 });
 
+let selectedCellView = null;
+
+paper.on('cell:pointerclick', function(cellView) {
+  if (selectedCellView !== null) {
+    selectedCellView.unhighlight();
+  }
+
+  selectedCellView = cellView;
+  selectedCellView.highlight();
+
+  selectionManager.setSelectedCells(selectedCellView.model);
+});
+
 let model = null;
 let activity = null;
+let selectionManager = null;
 
 // Connect to the domain.  See ../config.js for the connection settings.
 Convergence.connectAnonymously(DOMAIN_URL)
@@ -63,6 +77,6 @@ function handleOpen(results) {
   graphAdapter.bind();
 
   const colorManager = new ConvergenceJointUtils.ActivityColorManager(activity);
-
   const pointerManager = new ConvergenceJointUtils.PointerManager(paper, activity, colorManager, "../dist/img/cursor.svg");
+  selectionManager = new ConvergenceJointUtils.SelectionManager(paper, model, colorManager);
 }
