@@ -1,4 +1,5 @@
 # Convergence JointJS Utils
+[![Build Status](https://travis-ci.org/convergencelabs/jointjs-utils.svg?branch=master)](https://travis-ci.org/convergencelabs/jointjs-utils)
 
 This project contains utilities to that make integrating JointJS / Rappid with Convergence easy.
 
