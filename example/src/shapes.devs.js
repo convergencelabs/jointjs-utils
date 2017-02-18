@@ -36,16 +36,50 @@ const paper = new joint.dia.Paper({
 
 let selectedCellView = null;
 
-paper.on('cell:pointerclick', function(cellView) {
-  if (selectedCellView !== null) {
-    selectedCellView.unhighlight();
+const highlightOptions = {
+  highlighter: {
+    name: 'stroke',
+    options: {
+      padding: 15,
+      rx: 5,
+      ry: 5,
+      attrs: {
+        'stroke': '#333333',
+        'stroke-width': 1,
+        'stroke-dasharray': 5
+      }
+    }
+  }
+};
+
+paper.on('cell:pointerdown', function(cellView) {
+  if (cellView === selectedCellView) {
+    return;
   }
 
-  selectedCellView = cellView;
-  selectedCellView.highlight();
+  if (selectedCellView !== null) {
+    selectedCellView.unhighlight(null, highlightOptions);
+    selectedCellView = null;
+  }
 
-  selectionManager.setSelectedCells(selectedCellView.model);
+  if (cellView.model.isElement()) {
+    selectedCellView = cellView;
+    selectedCellView.highlight(null, highlightOptions);
+    selectionManager.setSelectedCells(selectedCellView.model);
+  } else {
+    selectionManager.setSelectedCells([]);
+  }
 });
+
+paper.on('blank:pointerdown', function(cellView) {
+  if (selectedCellView !== null) {
+    selectedCellView.unhighlight();
+    selectedCellView = null;
+  }
+
+  selectionManager.setSelectedCells([]);
+});
+
 
 let model = null;
 let activity = null;
