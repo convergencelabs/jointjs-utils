@@ -2,19 +2,48 @@ import {RealTimeModel, RealTimeObject} from "@convergence/convergence";
 import {CellAdapter} from "./CellAdapter";
 import {DataConverter} from "./DataConverter";
 
+declare const joint: any;
+
+/**
+ * The GraphAdapter class connects a JointJS Graph to a Convergence RealTimeModel.
+ */
 export class GraphAdapter {
   private _model: RealTimeModel;
   private _graph: any;
   private _remote: boolean;
   private _cellsModel: RealTimeObject;
   private _cellAdapters: {[key: string]: CellAdapter};
+  private _bound: boolean;
 
+  /**
+   * Constructs a new GraphAdapter from a supplied model. A new JointJS Graph will be
+   * created.
+   *
+   * @param model
+   * @returns {GraphAdapter}
+   */
+  static create(model: RealTimeModel): GraphAdapter {
+    const graph = new joint.dia.Graph;
+    return new GraphAdapter(graph, model);
+  }
+
+  /**
+   * Constructs a new GraphAdapter with the supplied JointJS graph and
+   * Convergence RealTimeModel.
+   *
+   * @param graph
+   *   The JointJS Graph
+   *
+   * @param model
+   *   The Convergence RealTimeModel
+   */
   constructor(graph: any, model: RealTimeModel) {
     this._model = model;
     this._graph = graph;
     this._remote = false;
     this._cellsModel = null;
     this._cellAdapters = {};
+    this._bound = false;
 
     this._onLocalCellAdded = this._onLocalCellAdded.bind(this);
     this._onRemoteCellAdded = this._onRemoteCellAdded.bind(this);
@@ -23,7 +52,44 @@ export class GraphAdapter {
     this._addCellAdapter = this._addCellAdapter.bind(this);
   }
 
+  /**
+   * Gets the JointJS Graph being used by this adapter.
+   *
+   * @returns {any}
+   *   the JointJS Graph being used by this adapter.
+   */
+  public graph(): any {
+    return this._graph;
+  }
+
+  /**
+   * Gets the Convergence RealTimeModel being used by this adapter.
+   *
+   * @returns {RealTimeModel}
+   *   the JointJS Graph being used by this adapter.
+   */
+  public model(): RealTimeModel {
+    return this._model;
+  }
+
+  /**
+   * Determines if the adapter is currently bound.
+   *
+   * @returns {boolean} true if the graph is currently bound, false otherwise.
+   */
+  public isBound(): boolean {
+    return this._bound;
+  }
+
+  /**
+   * Set the data in the JointJS Graph from the current data in the RealTimeModel and
+   * then creates a two-way binding between the Graph and RealTimeModel. This method
+   * can only be called when the adapter is not bound (e.g. isBound() returns false).
+   * After the method is called isBound() will return true.
+   */
   public bind(): void {
+    this._bound = true;
+
     const data: any = this._model.root().value();
     this._graph.fromJSON(DataConverter.modelDataToGraphJson(data));
     this._cellsModel = this._model.elementAt("cells") as RealTimeObject;
@@ -37,6 +103,11 @@ export class GraphAdapter {
     this._cellsModel.on("remove", this._onRemoteCellRemoved);
   }
 
+  /**
+   * Disconnects the Graph and RealTimeModel. This method should only be called if
+   * the adapter is bound (e.g. isBound() returns true). After this method is called
+   * the graph and model will not remain synchronized and isBound() will return false.
+   */
   public unbind(): void {
     this._graph.off("add", this._onLocalCellAdded);
     this._graph.off("remove", this._onLocalCellRemoved);

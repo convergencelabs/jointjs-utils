@@ -74,7 +74,8 @@
 }
 
 .joint-type-devs .joint-highlight-stroke {
-    stroke: #ff7e5d;
-    stroke-width: 6px;
+    stroke: #333366;
+    stroke-width: 2px;
+    stroke-dasharray: 5;
     pointer-events: none;
 }

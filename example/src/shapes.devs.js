@@ -1,7 +1,5 @@
 const graph = new joint.dia.Graph;
-
 const paper = new joint.dia.Paper({
-
     el: document.getElementById('paper'),
     width: 800,
     height: 400,
@@ -11,30 +9,20 @@ const paper = new joint.dia.Paper({
     linkPinning: false,
     embeddingMode: true,
     highlighting: {
-        'default': {
-            name: 'stroke',
-            options: {
-                padding: 6
-            }
-        },
-        'embedding': {
-            name: 'addClass',
-            options: {
-                className: 'highlighted-parent'
-            }
-        }
+        'default': { name: 'stroke', options: { padding: 6 } },
+        'embedding': { name: 'addClass', options: { className: 'highlighted-parent' } }
     },
-
     validateEmbedding: function(childView, parentView) {
         return parentView.model instanceof joint.shapes.devs.Coupled;
     },
-
     validateConnection: function(sourceView, sourceMagnet, targetView, targetMagnet) {
         return sourceMagnet != targetMagnet;
     }
 });
 
+// Setup selection behavior
 let selectedCellView = null;
+let selectionManager = null;
 
 const highlightOptions = {
   highlighter: {
@@ -42,12 +30,7 @@ const highlightOptions = {
     options: {
       padding: 15,
       rx: 5,
-      ry: 5,
-      attrs: {
-        'stroke': '#333333',
-        'stroke-width': 1,
-        'stroke-dasharray': 5
-      }
+      ry: 5
     }
   }
 };
@@ -80,11 +63,6 @@ paper.on('blank:pointerdown', function(cellView) {
   selectionManager.setSelectedCells([]);
 });
 
-
-let model = null;
-let activity = null;
-let selectionManager = null;
-
 // Connect to the domain.  See ../config.js for the connection settings.
 Convergence.connectAnonymously(DOMAIN_URL)
   .then(function (domain) {
@@ -94,23 +72,20 @@ Convergence.connectAnonymously(DOMAIN_URL)
     });
 
     const activityPromise = domain.activities().join("jointjs-example");
-
     return Promise.all([modelPromise, activityPromise])
   })
-  .then(handleOpen)
+  .then(function(results) {
+    const model = results[0];
+    const activity = results[1];
+
+    const graphAdapter = new ConvergenceJointUtils.GraphAdapter(graph, model);
+    graphAdapter.bind();
+
+    const colorManager = new ConvergenceJointUtils.ActivityColorManager(activity);
+    const pointerManager = new ConvergenceJointUtils.PointerManager(paper, activity, colorManager, "../dist/img/cursor.svg");
+    selectionManager = new ConvergenceJointUtils.SelectionManager(paper, model, colorManager);
+  })
   .catch(function (error) {
     console.error("Could not open model: " + error);
     throw error;
   });
-
-function handleOpen(results) {
-  const model = results[0];
-  const activity = results[1];
-
-  const graphAdapter = new ConvergenceJointUtils.GraphAdapter(graph, model);
-  graphAdapter.bind();
-
-  const colorManager = new ConvergenceJointUtils.ActivityColorManager(activity);
-  const pointerManager = new ConvergenceJointUtils.PointerManager(paper, activity, colorManager, "../dist/img/cursor.svg");
-  selectionManager = new ConvergenceJointUtils.SelectionManager(paper, model, colorManager);
-}
