@@ -10,10 +10,15 @@ The SelectionManager provides shared selection functionality using a Convergence
 
 ```JavaScript
 const model =  <some Convergence RealTimeModel>;
-const paper = <some JointJS Paper>;
+const activity = <some Convergence Activity>;
+
+const graphAdapter = ConvergenceJointUtils.GraphAdapter.create(model);
+const paper = new joint.dia.Paper({
+  model: graphAdapter.graph()
+});
 
 const colorManager = new ConvergenceJointUtils.ActivityColorManager(activity);
-const selectionManager = new ConvergenceJointUtils.SelectionManager(paper, model, colorManager);
+const selectionManager = new ConvergenceJointUtils.SelectionManager(paper, graphAdapter, colorManager);
 
 ```
 
@@ -21,7 +26,7 @@ const selectionManager = new ConvergenceJointUtils.SelectionManager(paper, model
 
 | Method  | Description |
 | ------------- | ------------- |
-| [constructor(paper, realTimeModel, colorManager)](#constructor)  | Creates a new SelectionManager.  |
+| [constructor(paper, graphAdapter, colorManager)](#constructor)  | Creates a new SelectionManager.  |
 | [dispose()](#dispose) | Disconnects the SelectionManager from the paper and model. |
 | [isDisposed()](#isDisposed) | Determines if the SelectionManager is disposed. |
 
@@ -29,15 +34,14 @@ const selectionManager = new ConvergenceJointUtils.SelectionManager(paper, model
 ## Constructor
 <a name="constructor"></a>
 `SelectionManager(paper, realTimeModel, colorManager)`
-Constructs a new SelectionManager remote selections will be rendered on the supplied paper. The local selection will be broadcast using an ElementReference from the realTimeModel.
+Constructs a new SelectionManager remote selections will be rendered on the supplied paper. The local selection will be broadcast using an ElementReference from the associated graphAdapter.
 
 **Note**: the realTimeModel should be bound to the graph that the paper is rendering. The colorManager determines the highlight color of remote selections.
 
 
 ```JavaScript
-const selectionManager = new ConvergenceJointUtils.SelectionManager(
-  paper, realTimeModel, colorManager);
-adapater.bind();
+const selectionManager = 
+  new ConvergenceJointUtils.SelectionManager(paper, realTimeModel, colorManager);
 ```
 
 ## Prototype Methods

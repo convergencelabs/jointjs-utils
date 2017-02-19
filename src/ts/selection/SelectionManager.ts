@@ -1,6 +1,7 @@
 import {RemoteSelection} from "./RemoteSelection";
 import {RealTimeModel, LocalElementReference, RemoteReferenceCreatedEvent} from "@convergence/convergence";
 import {ActivityColorManager} from "../util/ActivityColorManager";
+import {GraphAdapter} from "../graph/GraphAdapter";
 
 export class SelectionManager {
 
@@ -10,8 +11,16 @@ export class SelectionManager {
   private _colorManager: ActivityColorManager;
   private _disposed: boolean;
 
-  constructor(paper: any, model: RealTimeModel, colorManager: ActivityColorManager) {
-    this._model = model;
+  constructor(paper: any, graphAdapter: GraphAdapter, colorManager: ActivityColorManager) {
+    if (paper.options.model !== graphAdapter.graph()) {
+      throw new Error("The supplied paper and graphAdapter must have the same graph.");
+    }
+
+    if (!graphAdapter.isBound()) {
+      throw new Error("The graphAdapter must be bound.");
+    }
+
+    this._model = graphAdapter.model();
     this._selectionReference = null;
     this._paper = paper;
     this._colorManager = colorManager;

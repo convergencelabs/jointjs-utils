@@ -83,7 +83,7 @@ Convergence.connectAnonymously(DOMAIN_URL)
 
     const colorManager = new ConvergenceJointUtils.ActivityColorManager(activity);
     const pointerManager = new ConvergenceJointUtils.PointerManager(paper, activity, colorManager, "../dist/img/cursor.svg");
-    selectionManager = new ConvergenceJointUtils.SelectionManager(paper, model, colorManager);
+    selectionManager = new ConvergenceJointUtils.SelectionManager(paper, graphAdapter, colorManager);
   })
   .catch(function (error) {
     console.error("Could not open model: " + error);
