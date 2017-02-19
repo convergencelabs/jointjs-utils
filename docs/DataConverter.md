@@ -13,13 +13,11 @@ const graph = new joint.dia.Graph();
 // Add data to graph
 
 const modelJson =
-  ConvergenceJointUtils.DataConverter.graphJsonToModelData(
-    graph.toJSON());
+  ConvergenceJointUtils.DataConverter.graphJsonToModelData(graph.toJSON());
 
 const realTimeModel = // Some RealTimeModel
 const graphJson = 
-  ConvergenceJointUtils.DataConverter.modelDataToGraphJson(
-    realTimeModel().value());
+  ConvergenceJointUtils.DataConverter.modelDataToGraphJson(realTimeModel().value());
 ```
 
 #API
@@ -42,8 +40,8 @@ const graph = new joint.dia.Graph();
 
 // Add some cells ...
 
-const modelData = ConvergenceJointUtils.DataConverter
-  .graphJsonToModelData(graph.toJSON());
+const modelData =
+  ConvergenceJointUtils.DataConverter.graphJsonToModelData(graph.toJSON());
   
 realTimeModel.root.value(modelData);
 ```
@@ -55,8 +53,8 @@ Converts the Convergence representation of a graph to the Joint JSON Representat
 
 ```JavaScript
 const realTimeModel = // some real time model.
-const graphData = ConvergenceJointUtils.DataConverter
-  . modelDataToGraphJson(realTimeModel.root.value());
+const graphData =
+  ConvergenceJointUtils.DataConverter.modelDataToGraphJson(realTimeModel.root.value());
 
 const graph = new joint.dia.Graph();
 graph.fromJSON(graphData);
