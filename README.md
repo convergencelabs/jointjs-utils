@@ -7,7 +7,7 @@ This project contains utilities to that make integrating [JointJS](https://www.j
 - [`GraphAdapter`](docs/GraphAdapter.md): Keeps the data in the graph synchronized between users. Captures changes to the graph data model and updates the Convergence data model accordingly, which in turn notifies all other connected client.
 - [`PointerManager`](docs/PointerManager.md): Adapts the JointJS `Paper` class to capture the pointer location and distributes the pointer to other clients using a Convergence `Activity`. Remote users points are rendered on the Paper to show what other users are doing.
 - [`SelectionManager`](docs/SelectionManager.md): Provides basic shared selection, where each user can select on or more elements on the graph. Remote selections from other users are rendered to help coordinate users actions.
-- [`ActivityColorManager`](docs/ActivityColorManager.md): Assigns colors to each participant of a Convergence Activity to keep their cursor and selection colors consistent. **Note:** The ActivityColorManager will likely be moved to a separate utility, as it is not specific to JointJS.
+- [`ActivityColorManager`](docs/ActivityColorManager.md): Assigns colors to each participant of a Convergence Activity to keep their cursor and selection colors consistent.
 
 # Documentation
 Documentation can be found [Here](docs).

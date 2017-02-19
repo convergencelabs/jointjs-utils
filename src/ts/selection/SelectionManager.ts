@@ -40,17 +40,13 @@ export class SelectionManager {
     return this._disposed;
   }
 
-  dispose(): void {
+  public dispose(): void {
     if (this._disposed) {
       return;
     }
 
     this._model.off("reference", this._handleReferenceCreated);
     this._disposed = true;
-  }
-
-  private _handleReferenceCreated(event): void {
-    this._processReference(event.reference)
   }
 
   public setSelectedCells(selectedCells): void {
@@ -70,6 +66,10 @@ export class SelectionManager {
       return this._model.elementAt(["cells", cell.id]);
     });
     this._selectionReference.set(cellModels);
+  }
+
+  private _handleReferenceCreated(event): void {
+    this._processReference(event.reference)
   }
 
   private _processReference(reference): void {

@@ -1,5 +1,6 @@
 import * as ColorAssigner from "@convergence/color-assigner";
 import {Activity} from "@convergence/convergence";
+import {Subscription} from "rxjs";
 
 const defaultColors: string[] = ['mediumseagreen', 'cornflowerblue', 'mediumpurple', 'coral', 'gold', 'plum', 'lightseagreen',
   'mediumorchid', 'aquamarine', 'lightskyblue', 'violet', 'teal', 'lightsalmon', 'orange',
@@ -8,23 +9,42 @@ const defaultColors: string[] = ['mediumseagreen', 'cornflowerblue', 'mediumpurp
   'darkmagenta', 'lightcoral', 'sandybrown', 'orangered', 'darkseagreen', 'burlywood', 'steelblue',
   'blueviolet', 'hotpink', 'tomato'];
 
-// TODO This could be moved to it's own module as it is useful across many applications.
+
 export class ActivityColorManager {
 
   private _colorAssigner: ColorAssigner;
+  private _disposed: boolean;
+  private _joinedSubscription: Subscription;
+  private _leftSubscription: Subscription;
 
   constructor(activity: Activity, colors?: string[]) {
+    if (!(activity instanceof Activity)) {
+      throw new Error("Activity must be defined, and be an instance of a Convergence Activity.");
+    }
+
     colors = colors || defaultColors;
 
     this._colorAssigner = new ColorAssigner(colors);
 
-    activity.events()
+    this._joinedSubscription = activity.events()
       .filter(e => e.name === "session_joined")
       .subscribe(e => this._addSession(e.sessionId));
 
-    activity.events()
+    this._leftSubscription = activity.events()
       .filter(e => e.name === "session_left")
       .subscribe(e => this._removeSession(e.sessionId));
+
+    this._disposed = false;
+  }
+
+  public isDisposed(): boolean {
+    return this._disposed;
+  }
+
+  public dispose(): void {
+    this._disposed = true;
+    this._joinedSubscription.unsubscribe();
+    this._leftSubscription.unsubscribe();
   }
 
   public color(sessionId): string {

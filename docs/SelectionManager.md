@@ -19,7 +19,6 @@ const paper = new joint.dia.Paper({
 
 const colorManager = new ConvergenceJointUtils.ActivityColorManager(activity);
 const selectionManager = new ConvergenceJointUtils.SelectionManager(paper, graphAdapter, colorManager);
-
 ```
 
 #API
@@ -51,7 +50,7 @@ const selectionManager =
 Disconnects the SelectionManager from the paper and the RealTimeModel. After calling dispose, the local selection will no longer be broadcast and remote selections will be removed and no longer rendered. Once dispose is called this instance can no longer be used.
 
 ```JavaScript
-const = selectionManager = // new pointer manager;
+const = selectionManager = // new selection manager;
 console.log(selectionManager.isDisposed()); // prints: false
 
 selectionManager.dispose();
