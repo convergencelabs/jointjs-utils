@@ -16,6 +16,7 @@ export class PointerManager {
   private _mouseMoveCallback: RateLimitedFunction;
   private _scale: any;
   private _cursorSvgUrl: string;
+  private _disposed: boolean;
 
   constructor(paper, activity, colorManager, cursorSvgUrl) {
     this._paper = paper;
@@ -30,7 +31,26 @@ export class PointerManager {
     this._onMouseMove = this._onMouseMove.bind(this);
     this._onScaleUpdated = this._onScaleUpdated.bind(this);
 
+    this._disposed = false;
+
     this._init();
+  }
+
+  public dispose(): void {
+    if (this._activitySubscription !== null) {
+      this._activitySubscription.unsubscribe();
+      this._activitySubscription = null;
+    }
+
+    this._paper.off("scale", this._onScaleUpdated);
+    this._paper.$el.off("mousemove", this._mouseMoveCallback.func);
+    this._paper.$el.off("mouseleave", this._onMouseLeave);
+
+    this._disposed = true;
+  }
+
+  public isDisposed() {
+    return this._disposed;
   }
 
   private _init(): void {
@@ -70,17 +90,6 @@ export class PointerManager {
     this._mouseMoveCallback = rateLimit(this._onMouseMove, 40, true);
     this._paper.$el.mousemove(this._mouseMoveCallback.func);
     this._paper.$el.mouseleave(this._onMouseLeave);
-  }
-
-  public dispose(): void {
-    if (this._activitySubscription !== null) {
-      this._activitySubscription.unsubscribe();
-      this._activitySubscription = null;
-    }
-
-    this._paper.off("scale", this._onScaleUpdated);
-    this._paper.$el.off("mousemove", this._mouseMoveCallback.func);
-    this._paper.$el.off("mouseleave", this._onMouseLeave);
   }
 
   private _onScaleUpdated(e): void {

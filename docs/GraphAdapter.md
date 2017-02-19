@@ -25,11 +25,11 @@ adapter.unbind();  // When done.
 | Method  | Description |
 | ------------- | ------------- |
 | [static create(realTimeModel)](#create) | Creates a new GraphAdapter with the specified model and a new graph.  |
-| [constructor(graph, realTimeModel)](#constructor)  | Creates a new GraphAdpater with the specified graph and model.  |
-| [getGraph()](#getGraph) | Gets the JointJS Graph used by the adapater. |
-| [getModel()](#getModel) | Gets the RealTimeModel used by the adapater. |
+| [constructor(graph, realTimeModel)](#constructor)  | Creates a new GraphAdapter with the specified graph and model.  |
+| [getGraph()](#getGraph) | Gets the JointJS Graph used by the adapter. |
+| [getModel()](#getModel) | Gets the RealTimeModel used by the adapter. |
 | [isBound()](#isBound) | Determines if the adapter is bound. |
-| [bind()](#bind) | Binds the adapater if it is unbound. |
+| [bind()](#bind) | Binds the adapter if it is unbound. |
 | [unbind()](#unbind) | Unbinds the adapter if it is bound |
 
 
@@ -78,7 +78,7 @@ Gets the Convergence RealTimeModel that this adapter is using.
 
 ```JavaScript
 const adapter = ConvergenceJointUtils.GraphAdapter.create(someModel);
-const realTimeModel = getModel();
+const realTimeModel = adapter.getModel();
 ```
 
 <a name="isBound"></a>
