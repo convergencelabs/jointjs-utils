@@ -37,6 +37,10 @@ export class PointerManager {
   }
 
   public dispose(): void {
+    if (this._disposed) {
+      return;
+    }
+
     if (this._activitySubscription !== null) {
       this._activitySubscription.unsubscribe();
       this._activitySubscription = null;

@@ -8,6 +8,7 @@ export class SelectionManager {
   private _selectionReference: LocalElementReference;
   private _paper: any;
   private _colorManager: ActivityColorManager;
+  private _disposed: boolean;
 
   constructor(paper: any, model: RealTimeModel, colorManager: ActivityColorManager) {
     this._model = model;
@@ -22,10 +23,21 @@ export class SelectionManager {
     this._model.on("reference", (event: RemoteReferenceCreatedEvent) => {
       this._processReference(event.reference);
     });
+
+    this._disposed = false;
+  }
+
+  public isDisposed() {
+    return this._disposed;
   }
 
   dispose(): void {
+    if (this._disposed) {
+      return;
+    }
+
     this._model.off("reference", this._handleReferenceCreated);
+    this._disposed = true;
   }
 
   private _handleReferenceCreated(event): void {
@@ -33,6 +45,10 @@ export class SelectionManager {
   }
 
   public setSelectedCells(selectedCells): void {
+    if (this._disposed) {
+      return;
+    }
+
     if (selectedCells === null) {
       selectedCells = [];
     }

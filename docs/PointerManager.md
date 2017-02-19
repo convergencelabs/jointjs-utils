@@ -29,21 +29,20 @@ const pointerManager = new ConvergenceJointUtils.PointerManager(
 
 ## Constructor
 <a name="constructor"></a>
-`GraphAdapter(graph, realTimeModel)`
-Constructs a new GraphAdapter using the supplied JointJS Graph and Convergence RealTimeModel.
-
-**Note**: The GraphAdapter is not bound at this point. You must still call the [`bind()`](#bind) method to activate the two way binding.
+`PointerManager(paper, activity, colorManager, cursorSvgUrl)`
+Constructs a new PointerManager. The pointer manager will capture local pointer locations and render remote pointers on the supplied paper. The supplied activity will be used to determine who to share the pointer locations with. The color manager will be used to determine the color of each remote pointer.  The cursorSvg will be used to determine what the pointer looks like.
+ 
 
 ```JavaScript
-const adapter = new ConvergenceJointUtils.GraphAdapter(graph, someModel);
-adapater.bind();
+const pointerManager = new ConvergenceJointUtils.PointerManager(
+  paper, activity, colorManager, cursorSvgUrl);
 ```
 
 ## Prototype Methods
 <a name="dispose"></a>
 ## `dispose()`
 
-Disconnects the paper from the activity. After calling dispose, the local pointer will no longer be broadcast and remote pointers will be removed and not longer rendered. Once dispose is called this instance can no longer be used.
+Disconnects the paper from the activity. After calling dispose, the local pointer will no longer be broadcast and remote pointers will be removed and no longer rendered. Once dispose is called this instance can no longer be used.
 
 ```JavaScript
 const = pointerManager = // new pointer manager;

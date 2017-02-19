@@ -88,6 +88,10 @@ export class GraphAdapter {
    * After the method is called isBound() will return true.
    */
   public bind(): void {
+    if (this._bound) {
+      return;
+    }
+
     this._bound = true;
 
     const data: any = this._model.root().value();
@@ -109,6 +113,10 @@ export class GraphAdapter {
    * the graph and model will not remain synchronized and isBound() will return false.
    */
   public unbind(): void {
+    if (!this._bound) {
+      return;
+    }
+
     this._graph.off("add", this._onLocalCellAdded);
     this._graph.off("remove", this._onLocalCellRemoved);
 
@@ -120,6 +128,8 @@ export class GraphAdapter {
     });
 
     this._cellAdapters = {};
+
+    this._bound = false;
   }
 
   private _onLocalCellAdded(cell: any): void {
