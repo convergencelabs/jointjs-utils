@@ -55,7 +55,7 @@ export class GraphAdapter {
   /**
    * Gets the JointJS Graph being used by this adapter.
    *
-   * @returns {any}
+   * @returns {*}
    *   the JointJS Graph being used by this adapter.
    */
   public graph(): any {

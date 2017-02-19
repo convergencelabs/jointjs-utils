@@ -11,7 +11,6 @@ const mkdirp = require('mkdirp');
 const path = require('path');
 const header = require('gulp-header');
 const fs = require("fs");
-const babel = require("gulp-babel");
 
 const typescript = require('typescript');
 const ts = require('gulp-typescript');

@@ -3,6 +3,12 @@ import {RealTimeModel, LocalElementReference, RemoteReferenceCreatedEvent} from 
 import {ActivityColorManager} from "../util/ActivityColorManager";
 import {GraphAdapter} from "../graph/GraphAdapter";
 
+/**
+ * The SelectionManager provides remote selection awareness rendering remote
+ * selections to a paper. The class depends on a GraphAdapter that has bound
+ * a Graph to a RealTimeModel. The model (graph) of the Paper to render the
+ * selections on must be the same graph as in the GraphAdapter.
+ */
 export class SelectionManager {
 
   private _model: RealTimeModel;
@@ -10,7 +16,21 @@ export class SelectionManager {
   private _paper: any;
   private _colorManager: ActivityColorManager;
   private _disposed: boolean;
+  private _remoteSelections: {[key: string]: RemoteSelection};
 
+  /**
+   * Creates a new SelectionManager.
+   *
+   * @param paper {joint.dia.Paper}
+   *   Remote selections are rendered on this paper.  The paper's model (graph) must be
+   *   the same graph that the graphAdapter is bound to.
+   *
+   * @param graphAdapter {GraphAdapter}
+   *   A GraphAdapter that binds a graph to a RealTimeModel. The GraphAdapter must be bound.
+   *
+   * @param colorManager {ActivityColorManager}
+   *   Manages the colors of the remote selections.
+   */
   constructor(paper: any, graphAdapter: GraphAdapter, colorManager: ActivityColorManager) {
     if (paper.options.model !== graphAdapter.graph()) {
       throw new Error("The supplied paper and graphAdapter must have the same graph.");
@@ -36,10 +56,21 @@ export class SelectionManager {
     this._disposed = false;
   }
 
-  public isDisposed() {
+  /**
+   * Determines if the SelectionManager is disposed.
+   *
+   * @returns {boolean}
+   *   True if the SelectionManager is disposed, false otherwise.
+   */
+  public isDisposed(): boolean {
     return this._disposed;
   }
 
+  /**
+   * Disposes of this SelectionManager. After dispose is called, local
+   * selections will not be sent out and remote selections will not be
+   * rendered.
+   */
   public dispose(): void {
     if (this._disposed) {
       return;

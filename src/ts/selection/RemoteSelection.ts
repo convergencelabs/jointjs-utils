@@ -1,6 +1,11 @@
 import {RemoteSelectionItem} from "./RemoteSelectionItem";
+import {RealTimeObject} from "@convergence/convergence";
 
 declare const joint: any;
+
+export interface RemoteSelection {
+  setCells(cellModels: RealTimeObject);
+}
 
 export const RemoteSelection = joint.mvc.View.extend({
 
@@ -11,7 +16,7 @@ export const RemoteSelection = joint.mvc.View.extend({
     joint.mvc.View.call(this, options);
   },
 
-  init: function () {
+  init: function (): void {
     this.$el.appendTo(this.options.paper.el);
     this.$el.empty();
 
@@ -22,7 +27,7 @@ export const RemoteSelection = joint.mvc.View.extend({
     this.setCells(this.options.reference.values());
   },
 
-  setCells: function (cellModels) {
+  setCells: function (cellModels: RealTimeObject) {
     this.clear();
     cellModels.forEach(cellModel => {
       const cell = this.options.paper.model.getCell(cellModel.path().pop());
@@ -35,11 +40,11 @@ export const RemoteSelection = joint.mvc.View.extend({
     });
   },
 
-  clear: function () {
+  clear: function (): void {
     this.$el.empty();
   },
 
-  remove: function () {
+  remove: function (): void {
     this.$el.remove();
   }
 });

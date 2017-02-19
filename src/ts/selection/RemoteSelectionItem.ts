@@ -12,7 +12,8 @@ export const RemoteSelectionItem = joint.mvc.View.extend({
   },
 
   init: function () {
-    this.options.cell.on("change", this.update.bind(this));
+    this.onUpdate = this.update.bind(this);
+    this.options.cell.on("change", this.onUpdate);
     this.$el.appendTo(this.options.parent);
     this.update();
   },
@@ -45,6 +46,7 @@ export const RemoteSelectionItem = joint.mvc.View.extend({
   },
 
   remove: function () {
+    this.options.cell.off("change", this.onUpdate);
     this.$el.remove();
   }
 });
