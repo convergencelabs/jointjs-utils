@@ -9,12 +9,12 @@ export class DataConverter {
     return initData;
   }
 
-  public static modelDataToGraphJson(data: any): any {
+  public static modelDataToGraphJson(modelData: any): any {
     const graphJson = {
       cells: []
     };
-    Object.keys(data.cells).forEach(function (id) {
-      graphJson.cells.push(data.cells[id]);
+    Object.keys(modelData.cells).forEach(function (id) {
+      graphJson.cells.push(modelData.cells[id]);
     });
     return graphJson;
   }
