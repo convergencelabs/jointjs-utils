@@ -13,7 +13,7 @@ export class SelectionManager {
 
   private _model: RealTimeModel;
   private _selectionReference: LocalElementReference;
-  private _paper: any;
+  private _paper: joint.dia.Paper;
   private _colorManager: ActivityColorManager;
   private _disposed: boolean;
   private _remoteSelections: {[key: string]: RemoteSelection};
@@ -40,6 +40,7 @@ export class SelectionManager {
       throw new Error("The graphAdapter must be bound.");
     }
 
+    this._remoteSelections = {};
     this._model = graphAdapter.model();
     this._selectionReference = null;
     this._paper = paper;
@@ -77,6 +78,11 @@ export class SelectionManager {
     }
 
     this._model.off("reference", this._handleReferenceCreated);
+    Object.keys(this._remoteSelections).forEach(k => {
+      this._remoteSelections[k].remove();
+    });
+
+    this._remoteSelections = {};
     this._disposed = true;
   }
 
@@ -106,7 +112,11 @@ export class SelectionManager {
   private _processReference(reference): void {
     if (!reference.isLocal()) {
       const color: string = this._colorManager.color(reference.sessionId());
-      new RemoteSelection({reference: reference, color: color, paper: this._paper});
+      const remoteSelection = new RemoteSelection({reference: reference, color: color, paper: this._paper});
+      this._remoteSelections[reference.sessionId()] = remoteSelection;
+      reference.on("disposed", () => {
+        delete this._remoteSelections[reference.sessionId()];
+      });
     }
   }
 }

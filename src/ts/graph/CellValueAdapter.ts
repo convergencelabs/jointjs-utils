@@ -3,13 +3,13 @@ import {RealTimeObject, RealTimeElement, ObjectRemoveEvent, ObjectSetEvent} from
 export class CellValueAdapter {
 
   private _remote: boolean;
-  private _cell: any;
+  private _cell: joint.dia.Cell;
   private _cellModel: RealTimeObject;
   private _eventName: string;
   private _propertyName: string;
   private _valueElement: RealTimeElement<any>;
 
-  constructor(cell: any, cellModel: RealTimeObject, eventName: string, propertyName: string) {
+  constructor(cell: joint.dia.Cell, cellModel: RealTimeObject, eventName: string, propertyName: string) {
     this._remote = false;
     this._cell = cell;
     this._cellModel = cellModel;

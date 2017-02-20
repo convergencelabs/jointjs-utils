@@ -1,10 +1,10 @@
 
-export interface RateLimitedFunction {
-  func: Function,
+export interface RateLimitedFunction<T> {
+  func: T,
   clear?();
 }
 
-export function rateLimit(callback: Function, minIntervalMs: number, clearable: boolean): RateLimitedFunction {
+export function rateLimit<T extends (...args: any[]) => any>(callback: T, minIntervalMs: number, clearable: boolean): RateLimitedFunction<T> {
   let lastEventTime: number = 0;
   let finalEventTimerId: any = null;
   const context: any = this;
@@ -26,11 +26,11 @@ export function rateLimit(callback: Function, minIntervalMs: number, clearable: 
         callback.apply(context, args);
       }, minIntervalMs - delta);
     }
-  };
+  } as T;
 
   if (!clearable) {
     return {
-      func: func
+      func: func as T
     };
   } else {
     return {

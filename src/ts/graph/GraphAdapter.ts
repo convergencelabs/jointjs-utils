@@ -1,15 +1,15 @@
 import {RealTimeModel, RealTimeObject} from "@convergence/convergence";
 import {CellAdapter} from "./CellAdapter";
 import {DataConverter} from "./DataConverter";
-
-declare const joint: any;
+import {LinkAdapter} from "./LinkAdapter";
+import {ElementAdapter} from "./ElementAdapter";
 
 /**
  * The GraphAdapter class connects a JointJS Graph to a Convergence RealTimeModel.
  */
 export class GraphAdapter {
   private _model: RealTimeModel;
-  private _graph: any;
+  private _graph: joint.dia.Graph;
   private _remote: boolean;
   private _cellsModel: RealTimeObject;
   private _cellAdapters: {[key: string]: CellAdapter};
@@ -37,7 +37,7 @@ export class GraphAdapter {
    * @param model
    *   The Convergence RealTimeModel
    */
-  constructor(graph: any, model: RealTimeModel) {
+  constructor(graph: joint.dia.Graph, model: RealTimeModel) {
     this._model = model;
     this._graph = graph;
     this._remote = false;
@@ -166,8 +166,13 @@ export class GraphAdapter {
   };
 
   private _addCellAdapter(cell: any): void {
-    const cellModel = this._cellsModel.get(cell.id);
-    const adapter = new CellAdapter(cell, cellModel);
+    const cellModel = this._cellsModel.get(cell.id) as RealTimeObject;
+    let adapter: CellAdapter = null;
+    if (cell instanceof joint.dia.Link) {
+      adapter = new LinkAdapter(cell, cellModel);
+    } else if (cell instanceof joint.dia.Element) {
+      adapter = new ElementAdapter(cell, cellModel);
+    }
     adapter.bind();
     this._cellAdapters[cell.id] = adapter;
   };

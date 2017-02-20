@@ -1,50 +1,80 @@
 import {RemoteSelectionItem} from "./RemoteSelectionItem";
-import {RealTimeObject} from "@convergence/convergence";
+import {RealTimeObject, ElementReference} from "@convergence/convergence";
+import ViewOptions = Backbone.ViewOptions;
 
-declare const joint: any;
-
-export interface RemoteSelection {
-  setCells(cellModels: RealTimeObject);
+export interface RemoteSelectionOptions extends ViewOptions<any> {
+  reference: ElementReference,
+  color: string;
+  paper: joint.dia.Paper;
 }
 
-export const RemoteSelection = joint.mvc.View.extend({
+export class RemoteSelection extends joint.mvc.View<any> {
 
-  tagName: 'div',
-  className: 'remote-selection',
+  get tagName(): string {return 'div';}
+  get className(): string {return 'remote-selection';}
 
-  constructor: function (options) {
-    joint.mvc.View.call(this, options);
-  },
+  private _items: RemoteSelectionItem[];
 
-  init: function (): void {
+  constructor(options: RemoteSelectionOptions) {
+    super(options);
+  }
+
+  init(): void {
+    // We have to do this here because init is called before the constructor
+    // super call returns.
+    this._onClear = this._onClear.bind(this);
+    this._onSet = this._onSet.bind(this);
+    this._onDisposed = this._onDisposed.bind(this);
+
+    this._items = [];
+
     this.$el.appendTo(this.options.paper.el);
     this.$el.empty();
 
-    this.options.reference.on("set", event => this.setCells(event.src.values()));
-    this.options.reference.on("clear", cellIds => this.clear());
-    this.options.reference.on("disposed", cellIds => this.remove());
+    this.options.reference.on("set", this._onSet);
+    this.options.reference.on("clear", this._onClear);
+    this.options.reference.on("disposed", this._onDisposed);
 
-    this.setCells(this.options.reference.values());
-  },
+    this._setCells(this.options.reference.values());
+  }
 
-  setCells: function (cellModels: RealTimeObject) {
-    this.clear();
+  public remove(): RemoteSelection {
+    this.options.reference.off("set", this._onSet);
+    this.options.reference.on("clear", this._onClear);
+    this.options.reference.on("disposed", this._onDisposed);
+
+    this.$el.remove();
+    return this;
+  }
+
+  private _onSet(event) {
+    this._setCells(event.src.values())
+  }
+
+  private _onClear() {
+    this._clear();
+  }
+
+  private _onDisposed() {
+    this.remove();
+  }
+
+  private _setCells(cellModels: RealTimeObject): void {
+    this._clear();
     cellModels.forEach(cellModel => {
       const cell = this.options.paper.model.getCell(cellModel.path().pop());
-      new RemoteSelectionItem({
+      this._items.push(new RemoteSelectionItem({
         paper: this.options.paper,
         parent: this.$el,
         cell: cell,
         color: this.options.color
-      });
+      }));
     });
-  },
-
-  clear: function (): void {
-    this.$el.empty();
-  },
-
-  remove: function (): void {
-    this.$el.remove();
   }
-});
+
+  private _clear(): void {
+    this._items.forEach(item => item.remove());
+    this._items = [];
+    this.$el.empty();
+  }
+}

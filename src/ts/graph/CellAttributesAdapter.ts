@@ -8,10 +8,10 @@ import {RealTimeObject} from "@convergence/convergence";
 export class CellAttributesAdapter {
 
   private _remote: boolean;
-  private _cell: any;
+  private _cell: joint.dia.Cell;
   private _cellModel: RealTimeObject;
 
-  constructor(cell: any, cellModel: RealTimeObject) {
+  constructor(cell: joint.dia.Cell, cellModel: RealTimeObject) {
     this._remote = false;
     this._cell = cell;
     this._cellModel = cellModel;

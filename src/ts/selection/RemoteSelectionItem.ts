@@ -1,24 +1,29 @@
 
-declare const joint: any;
-declare const g: any;
+import ViewOptions = Backbone.ViewOptions;
+export interface RemoteSelectionItemOptions extends ViewOptions<any> {
+  paper: joint.dia.Paper;
+  parent: JQuery,
+  cell: joint.dia.Cell;
+  color: string;
+}
 
-export const RemoteSelectionItem = joint.mvc.View.extend({
+export class RemoteSelectionItem extends joint.mvc.View<any> {
 
-  tagName: 'div',
-  className: 'remote-selection-item',
+  get tagName(): string {return 'div';}
+  get className(): string {return 'remote-selection-item';}
 
-  constructor: function (options) {
-    joint.mvc.View.call(this, options);
-  },
+  constructor(options: RemoteSelectionItemOptions) {
+    super(options);
+  }
 
-  init: function () {
-    this.onUpdate = this.update.bind(this);
-    this.options.cell.on("change", this.onUpdate);
+  init() {
+    this.update = this.update.bind(this);
+    this.options.cell.on("change", this.update);
     this.$el.appendTo(this.options.parent);
     this.update();
-  },
+  }
 
-  update: function () {
+  update() {
     // The transformation matrix.
     const ctm = this.options.paper.viewport.getCTM();
     const cellBBox = this.options.cell.getBBox();
@@ -43,10 +48,11 @@ export const RemoteSelectionItem = joint.mvc.View.extend({
       "-webkit-transform": rotateStyle,
       "-ms-transform": rotateStyle
     });
-  },
-
-  remove: function () {
-    this.options.cell.off("change", this.onUpdate);
-    this.$el.remove();
   }
-});
+
+  remove(): RemoteSelectionItem {
+    this.options.cell.off("change", this.update);
+    this.$el.remove();
+    return this;
+  }
+}

@@ -4,21 +4,39 @@ import {RemotePointer} from "./RemotePointer";
 import {rateLimit, RateLimitedFunction} from "../util/rateLimit";
 import {ActivityColorManager} from "../util/ActivityColorManager";
 
-declare const V: any;
-
+/**
+ * The PointerManager implements shared pointers attached to a Paper and
+ * communicated via a Convergence Activity.
+ */
 export class PointerManager {
 
-  private _paper: any;
+  private _paper: joint.dia.Paper;
   private _activity: Activity;
   private _colorManager: ActivityColorManager;
   private _remotePointers = {};
   private _activitySubscription: Subscription;
-  private _mouseMoveCallback: RateLimitedFunction;
-  private _scale: any;
+  private _mouseMoveCallback: RateLimitedFunction<(eventObject: JQueryMouseEventObject) => any>;
+  private _scale: {sx: number, sy: number};
   private _cursorSvgUrl: string;
   private _disposed: boolean;
 
-  constructor(paper, activity, colorManager, cursorSvgUrl) {
+  /**
+   * Constructs a new PointerManager.
+   *
+   * @param paper
+   *   The paper to source local mouse events from and on which to render
+   *   remote pointers.
+   *
+   * @param activity
+   *   The activity that is used to broadcast and receive pointer locations.
+   *
+   * @param colorManager
+   *   The ActivityColorManager that will be used to obtain the colors of the pointers.
+   *
+   * @param cursorSvgUrl
+   *   The url of the svg data to use to render the remote cursors.
+   */
+  constructor(paper: joint.dia.Paper, activity: Activity, colorManager: ActivityColorManager, cursorSvgUrl: string) {
     this._paper = paper;
     this._activity = activity;
     this._colorManager = colorManager;
@@ -33,31 +51,6 @@ export class PointerManager {
 
     this._disposed = false;
 
-    this._init();
-  }
-
-  public dispose(): void {
-    if (this._disposed) {
-      return;
-    }
-
-    if (this._activitySubscription !== null) {
-      this._activitySubscription.unsubscribe();
-      this._activitySubscription = null;
-    }
-
-    this._paper.off("scale", this._onScaleUpdated);
-    this._paper.$el.off("mousemove", this._mouseMoveCallback.func);
-    this._paper.$el.off("mouseleave", this._onMouseLeave);
-
-    this._disposed = true;
-  }
-
-  public isDisposed() {
-    return this._disposed;
-  }
-
-  private _init(): void {
     // Initialize any existing participants.
     this._activity.participants().forEach((participant) => {
       if (!participant.local) {
@@ -89,15 +82,52 @@ export class PointerManager {
 
     // Listen to events from the paper
     this._paper.on("scale", this._onScaleUpdated);
-    this._scale = V(this._paper.viewport).scale();
+    this._onScaleUpdated();
 
     this._mouseMoveCallback = rateLimit(this._onMouseMove, 40, true);
     this._paper.$el.mousemove(this._mouseMoveCallback.func);
     this._paper.$el.mouseleave(this._onMouseLeave);
   }
 
-  private _onScaleUpdated(e): void {
-    this._scale = V(this._paper.viewport).scale()
+  /**
+   * Disposes this PointerManager. All remote pointers will be removed. Local
+   * pointer events will not longer be sent. After calling dispose, this
+   * instance is essentially useless.
+   */
+  public dispose(): void {
+    if (this._disposed) {
+      return;
+    }
+
+    if (this._activitySubscription !== null) {
+      this._activitySubscription.unsubscribe();
+      this._activitySubscription = null;
+    }
+
+    this._paper.off("scale", this._onScaleUpdated);
+    this._paper.$el.off("mousemove", this._mouseMoveCallback.func);
+    this._paper.$el.off("mouseleave", this._onMouseLeave);
+
+    Object.keys(this._remotePointers).forEach(key => {
+      this._remotePointers[key].remove();
+    });
+
+    this._disposed = true;
+  }
+
+  /**
+   * Determines if the PointerManager is disposed.
+   *
+   * @returns {boolean}
+   *   True if the PointerManager is disposed, false otherwise.
+   */
+  public isDisposed(): boolean {
+    return this._disposed;
+  }
+
+  private _onScaleUpdated(): void {
+    // TODO in a recent version of JointJS, the scale might exist on the Paper.
+    this._scale = V(this._paper.viewport).scale();
   }
 
   private _onSessionJoined(e): void {
