@@ -11,6 +11,7 @@ const mkdirp = require('mkdirp');
 const path = require('path');
 const header = require('gulp-header');
 const fs = require("fs");
+const merge = require("merge2");
 
 const typescript = require('typescript');
 const ts = require('gulp-typescript');
@@ -72,11 +73,18 @@ gulp.task('webpack-umd', function () {
 });
 
 gulp.task('typescript-cjs', function () {
-  return gulp.src('src/ts/**/*.ts')
+  const tsResult =  gulp.src('src/ts/**/*.ts')
     .pipe(sourcemaps.init())
-    .pipe(tsProject())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./build/lib/'));
+    .pipe(tsProject());
+
+
+  return merge([
+    tsResult.dts
+      .pipe(gulp.dest('build/types')),
+    tsResult.js
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest('build/lib'))
+  ]);
 });
 
 gulp.task('minify-umd', ["webpack-umd"], function () {
