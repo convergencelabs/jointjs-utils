@@ -72,13 +72,9 @@ gulp.task('webpack-umd', function () {
 });
 
 gulp.task('typescript-cjs', function () {
-  const headerTxt = fs.readFileSync("./copyright-header.txt");
-  const packageJson = JSON.parse(fs.readFileSync("./package.json"));
-
   return gulp.src('src/ts/**/*.ts')
     .pipe(sourcemaps.init())
     .pipe(tsProject())
-    .pipe(header(headerTxt, {package: packageJson}))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/lib/'));
 });
