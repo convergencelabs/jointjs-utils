@@ -1,4 +1,5 @@
 import {RealTimeObject} from "@convergence/convergence";
+import * as joint from "jointjs";
 
 // TODO The attributes are basically just getting replaced. We should see if it is a string attribute
 // or boolean, etc, and perhaps do something smarter.  For example we can't do character by character

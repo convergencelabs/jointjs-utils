@@ -57,6 +57,20 @@ gulp.task('copy-types',  function () {
     .pipe(gulp.dest(distDir + "/types/"));
 });
 
+gulp.task('typescript-cjs', function () {
+  const tsResult =  gulp.src('src/ts/**/*.ts')
+    .pipe(sourcemaps.init())
+    .pipe(tsProject());
+
+  return merge([
+    tsResult.dts
+      .pipe(gulp.dest('build/types')),
+    tsResult.js
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest('build/lib'))
+  ]);
+});
+
 gulp.task('webpack-umd', function () {
   const outputPath = `${buildDir}/browser`;
 
@@ -70,21 +84,6 @@ gulp.task('webpack-umd', function () {
     .pipe(sourcemaps.write('.'))
     .pipe(rename({ basename: filename }))
     .pipe(gulp.dest(outputPath));
-});
-
-gulp.task('typescript-cjs', function () {
-  const tsResult =  gulp.src('src/ts/**/*.ts')
-    .pipe(sourcemaps.init())
-    .pipe(tsProject());
-
-
-  return merge([
-    tsResult.dts
-      .pipe(gulp.dest('build/types')),
-    tsResult.js
-      .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest('build/lib'))
-  ]);
 });
 
 gulp.task('minify-umd', ["webpack-umd"], function () {

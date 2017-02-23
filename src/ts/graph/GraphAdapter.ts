@@ -3,6 +3,7 @@ import {CellAdapter} from "./CellAdapter";
 import {DataConverter} from "./DataConverter";
 import {LinkAdapter} from "./LinkAdapter";
 import {ElementAdapter} from "./ElementAdapter";
+import * as joint from "jointjs";
 
 /**
  * The GraphAdapter class connects a JointJS Graph to a Convergence RealTimeModel.

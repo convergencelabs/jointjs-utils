@@ -2,6 +2,7 @@ import {RemoteSelection} from "./RemoteSelection";
 import {RealTimeModel, LocalElementReference, RemoteReferenceCreatedEvent} from "@convergence/convergence";
 import {ActivityColorManager} from "../util/ActivityColorManager";
 import {GraphAdapter} from "../graph/GraphAdapter";
+import * as joint from "jointjs";
 
 /**
  * The SelectionManager provides remote selection awareness rendering remote
@@ -86,7 +87,7 @@ export class SelectionManager {
     this._disposed = true;
   }
 
-  public setSelectedCells(selectedCells): void {
+  public setSelectedCells(selectedCells: null | joint.dia.Cell | joint.dia.Cell[]): void {
     if (this._disposed) {
       return;
     }

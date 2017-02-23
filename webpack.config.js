@@ -31,5 +31,6 @@ module.exports = {
     "@convergence/convergence": "Convergence",
     "@convergence/color-assigner": "ColorAssigner",
     "jquery": "$",
+    "jointjs": "joint"
   }
 };

@@ -3,6 +3,7 @@ import {Subscription} from "rxjs";
 import {RemotePointer} from "./RemotePointer";
 import {rateLimit, RateLimitedFunction} from "../util/rateLimit";
 import {ActivityColorManager} from "../util/ActivityColorManager";
+import * as joint from "jointjs";
 
 /**
  * The PointerManager implements shared pointers attached to a Paper and
@@ -127,7 +128,7 @@ export class PointerManager {
 
   private _onScaleUpdated(): void {
     // TODO in a recent version of JointJS, the scale might exist on the Paper.
-    this._scale = V(this._paper.viewport).scale();
+    this._scale = joint.V(this._paper.viewport).scale();
   }
 
   private _onSessionJoined(e): void {

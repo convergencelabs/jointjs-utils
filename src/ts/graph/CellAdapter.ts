@@ -1,6 +1,7 @@
 import {RealTimeObject} from "@convergence/convergence";
 import {CellValueAdapter} from "./CellValueAdapter";
 import {CellAttributesAdapter} from "./CellAttributesAdapter";
+import * as joint from "jointjs";
 
 /**
  * Connects a JointJS Cell to a RealTimeObject.

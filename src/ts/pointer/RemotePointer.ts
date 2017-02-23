@@ -1,10 +1,10 @@
 import * as $ from 'jquery';
-import ViewOptions = Backbone.ViewOptions;
+import * as joint from "jointjs";
 
 /**
  * Defines the options for the {RemotePointer} class.
  */
-export interface RemotePointerOptions extends ViewOptions<any> {
+export interface RemotePointerOptions extends Backbone.ViewOptions<any> {
   paper: joint.dia.Paper;
   color: string;
   cursorSvgUrl: string;
@@ -90,6 +90,6 @@ export class RemotePointer extends joint.mvc.View<any> {
   }
 
   private _updateScale(): void {
-    this._scale = V(this._paper.viewport).scale();
+    this._scale = joint.V(this._paper.viewport).scale();
   }
 }

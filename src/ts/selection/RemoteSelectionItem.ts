@@ -1,6 +1,6 @@
+import * as joint from "jointjs";
 
-import ViewOptions = Backbone.ViewOptions;
-export interface RemoteSelectionItemOptions extends ViewOptions<any> {
+export interface RemoteSelectionItemOptions extends Backbone.ViewOptions<any> {
   paper: joint.dia.Paper;
   parent: JQuery,
   cell: joint.dia.Cell;
@@ -35,7 +35,7 @@ export class RemoteSelectionItem extends joint.mvc.View<any> {
     cellBBox.width *= ctm.a;
     cellBBox.height *= ctm.d;
 
-    const angle = g.normalizeAngle(this.options.cell.get("angle") || 0);
+    const angle = joint.g.normalizeAngle(this.options.cell.get("angle") || 0);
     const rotateStyle = "rotate(" + angle + "deg)";
 
     this.$el.css({

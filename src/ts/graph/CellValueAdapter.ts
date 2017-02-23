@@ -1,4 +1,5 @@
 import {RealTimeObject, RealTimeElement, ObjectRemoveEvent, ObjectSetEvent} from "@convergence/convergence";
+import * as joint from "jointjs";
 
 export class CellValueAdapter {
 

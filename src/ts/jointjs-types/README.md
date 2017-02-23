@@ -1,1 +1,0 @@
-This folder provides partial typescript definitiions for JointJS. This will probably be completed and moved out into a separate project at some point. 
