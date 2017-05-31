@@ -1,6 +1,6 @@
 {
   "name": "@convergence/jointjs-utils",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A utility to bind a Convergence Model to a JointJS Graph",
   "keywords": [
     "Convergence",

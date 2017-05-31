@@ -16,7 +16,8 @@ const merge = require("merge2");
 const typescript = require('typescript');
 const ts = require('gulp-typescript');
 const tsProject = ts.createProject('tsconfig.json', {
-  typescript: typescript
+  typescript: typescript,
+  declaration: true
 });
 
 const filename = "convergence-jointjs-utils";
