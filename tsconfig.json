@@ -6,7 +6,7 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "declaration": true
+    "declaration": false
   },
   "include": [
     "src/ts/**/*"

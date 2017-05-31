@@ -77,7 +77,7 @@ gulp.task('webpack-umd', function () {
   const packageJson = JSON.parse(fs.readFileSync("./package.json"));
   const headerTxt = fs.readFileSync("./copyright-header.txt");
 
-  return gulp.src('src/ts/**/*.ts')
+  return gulp.src('src/ts/index.ts')
     .pipe(sourcemaps.init())
     .pipe(webpackStream(require("./webpack.config.js"), webpack2))
     .pipe(header(headerTxt, {package: packageJson}))
