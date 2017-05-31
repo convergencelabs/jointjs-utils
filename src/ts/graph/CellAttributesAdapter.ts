@@ -32,7 +32,7 @@ export class CellAttributesAdapter {
   private _onLocalAttributeChanged = (cell, attrs, details) => {
     if (!this._remote && details.propertyPath !== undefined) {
       const path = details.propertyPath.split("/");
-      if (typeof this._cellModel.elementAt(path) === "undefined") {
+      if (this._cellModel.elementAt(path).type() === "undefined") {
         this._createAttributePathAndValue(path, details.propertyValue);
       } else {
         this._cellModel.elementAt(path).value(details.propertyValue);
@@ -43,7 +43,7 @@ export class CellAttributesAdapter {
   private _onRemoteAttributeChanged = (event) => {
     this._remote = true;
     const propertyPath = event.relativePath.join("/");
-    this._cell.attr(propertyPath, event.childEvent.src.value());
+    this._cell.attr(propertyPath, event.childEvent.element.value());
     this._remote = false;
   };
 
