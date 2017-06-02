@@ -9,10 +9,10 @@ The GraphAdapter creates a two-way data binding between a JointJS Graph (joint.d
 #Example
 
 ```JavaScript
-const realTimeModel = '<some real time model>';
+const realTimeObject = realTimeModel.root();
 const graph = new joint.dia.Graph();
 
-const adapter = new ConvergenceJointUtils.GraphAdapter(graph, model);
+const adapter = new ConvergenceJointUtils.GraphAdapter(graph, realTimeObject);
 adapter.bind();
 
 // Use the graph adapter and the real time model.
