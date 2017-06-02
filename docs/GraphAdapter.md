@@ -27,7 +27,7 @@ adapter.unbind();  // When done.
 | [static create(realTimeObject)](#create) | Creates a new GraphAdapter with the specified real time object and a new graph.  |
 | [constructor(graph, realTimeObject)](#constructor)  | Creates a new GraphAdapter with the specified graph and object.  |
 | [getGraph()](#getGraph) | Gets the JointJS Graph used by the adapter. |
-| [getModel()](#getGraphObject) | Gets the RealTimeModel used by the adapter. |
+| [getGraphObject()](#getGraphObject) | Gets the RealTimeModel used by the adapter. |
 | [isBound()](#isBound) | Determines if the adapter is bound. |
 | [bind()](#bind) | Binds the adapter if it is unbound. |
 | [unbind()](#unbind) | Unbinds the adapter if it is bound |
