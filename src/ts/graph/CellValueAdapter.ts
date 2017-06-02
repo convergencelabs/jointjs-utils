@@ -83,7 +83,12 @@ export class CellValueAdapter {
     if (this._cellModel.hasKey(this._propertyName)) {
       // The cell model already has this property so we want to
       // updated the existing sub element in the model.
-      this._cellModel.get(this._propertyName).value(value);
+      if (value === undefined) {
+        // JointJS sets this to undefined when it is removed.
+        this._cellModel.remove(this._propertyName);
+      } else {
+        this._cellModel.get(this._propertyName).value(value);
+      }
     } else {
       // This is the first time the property is being set so
       // we need to set the property in the parent, which will

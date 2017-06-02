@@ -1,6 +1,6 @@
 # GraphAdapter
 
-The GraphAdapter creates a two-way data binding between a JointJS Graph (joint.dia.Graph) and a Convergence RealTimeModel. Once the GraphAdapter has been configured, any changes to the Graph (either by the user or via the API) will be synchronized into the Convergence RealTimeModel and distributed to any other connected clients. Any incoming changes to the Convergence RealTimeModel will be automatically reflected in the JointJS Graph.
+The GraphAdapter creates a two-way data binding between a JointJS Graph (joint.dia.Graph) and a Convergence RealTimeObject or RealTimeModel. Once the GraphAdapter has been configured, any changes to the Graph (either by the user or via the API) will be synchronized into the Convergence RealTimeModel and distributed to any other connected clients. Any incoming changes to the Convergence RealTimeModel will be automatically reflected in the JointJS Graph.
 
 # Namespace
 
@@ -24,10 +24,10 @@ adapter.unbind();  // When done.
 
 | Method  | Description |
 | ------------- | ------------- |
-| [static create(realTimeModel)](#create) | Creates a new GraphAdapter with the specified model and a new graph.  |
-| [constructor(graph, realTimeModel)](#constructor)  | Creates a new GraphAdapter with the specified graph and model.  |
+| [static create(realTimeObject)](#create) | Creates a new GraphAdapter with the specified real time object and a new graph.  |
+| [constructor(graph, realTimeObject)](#constructor)  | Creates a new GraphAdapter with the specified graph and object.  |
 | [getGraph()](#getGraph) | Gets the JointJS Graph used by the adapter. |
-| [getModel()](#getModel) | Gets the RealTimeModel used by the adapter. |
+| [getModel()](#getGraphObject) | Gets the RealTimeModel used by the adapter. |
 | [isBound()](#isBound) | Determines if the adapter is bound. |
 | [bind()](#bind) | Binds the adapter if it is unbound. |
 | [unbind()](#unbind) | Unbinds the adapter if it is bound |
@@ -37,26 +37,26 @@ adapter.unbind();  // When done.
 ## Static Methods
 
 <a name="create"></a>
-##`create(realTimeModel)`
+##`create(realTimeObject)`
 
-This static method will create a new GraphAdapter using the supplied real time model.  The GraphAdapater will be constructed with a new JointJS graph. The graph can then be accessed using the [`getGraph()`](#getGraph) method.
+This static method will create a new GraphAdapter using the supplied RealTimeObject.  A RealTimeModel can also be passed in, in which case the root object of the model will be used. The GraphAdapter will be constructed with a new JointJS graph. The graph can then be accessed using the [`getGraph()`](#getGraph) method.
 
 **Note**: The GraphAdapter is not bound at this point. You must still call the [`bind()`](#bind) method to activate the two way binding.
 
 ```JavaScript
-const adapter = ConvergenceJointUtils.GraphAdapter.create(someModel);
+const adapter = ConvergenceJointUtils.GraphAdapter.create(someObject);
 adapater.bind();
 ```
 
 ## Constructor
 <a name="constructor"></a>
-`GraphAdapter(graph, realTimeModel)`
-Constructs a new GraphAdapter using the supplied JointJS Graph and Convergence RealTimeModel.
+`GraphAdapter(graph, realTimeObject)`
+Constructs a new GraphAdapter using the supplied JointJS Graph and Convergence RealTimeObject. A RealTimeModel can also be passed in, in which case the root object of the model will be used.
 
 **Note**: The GraphAdapter is not bound at this point. You must still call the [`bind()`](#bind) method to activate the two way binding.
 
 ```JavaScript
-const adapter = new ConvergenceJointUtils.GraphAdapter(graph, someModel);
+const adapter = new ConvergenceJointUtils.GraphAdapter(graph, someObject);
 adapater.bind();
 ```
 
@@ -67,18 +67,18 @@ adapater.bind();
 Gets the JointJS Graph that this adapter is using.
 
 ```JavaScript
-const adapter = ConvergenceJointUtils.GraphAdapter.create(someModel);
+const adapter = ConvergenceJointUtils.GraphAdapter.create(someObject);
 const graph = adapter.getGraph();
 ```
 
-<a name="getModel"></a>
-## `getModel()`
+<a name="getGraphObject"></a>
+## `getGraphObject()`
 
 Gets the Convergence RealTimeModel that this adapter is using.
 
 ```JavaScript
-const adapter = ConvergenceJointUtils.GraphAdapter.create(someModel);
-const realTimeModel = adapter.getModel();
+const adapter = ConvergenceJointUtils.GraphAdapter.create(someObject);
+const realTimeObject = adapter.getGraphObject();
 ```
 
 <a name="isBound"></a>
@@ -87,7 +87,7 @@ const realTimeModel = adapter.getModel();
 Determines if the GraphAdapter is currently bound. If the adapter is bound, then two-way data binding is active and changes to the model or graph will be reflected in the other. Returns true if two-way data binding is active, or false if it is not.
 
 ```JavaScript
-const adapter = ConvergenceJointUtils.GraphAdapter.create(someModel);
+const adapter = ConvergenceJointUtils.GraphAdapter.create(someObject);
 console.log(adapter.isBound()) // prints: false
 
 adapter.bind();
@@ -102,7 +102,7 @@ Binds the JointJS Graph to the Convergence RealTimeModel. The current value of t
 **Note**: Any data currently in the Graph will be replaced by the data in the RealTimeModel. This method should only be called when the GraphAdapter is not already bound. If it is already bound, the method call will be ignored.
 
 ```JavaScript
-const adapter = ConvergenceJointUtils.GraphAdapter.create(someModel);
+const adapter = ConvergenceJointUtils.GraphAdapter.create(someObject);
 adapter.bind();
 ```
 
@@ -114,7 +114,7 @@ Unbinds the JointJS Graph from the Convergence RealTimeModel. The current value 
 **Note**: This method should only be called when the GraphAdapter is bound. If it is not bound, the method call will be ignored.
 
 ```JavaScript
-const adapter = ConvergenceJointUtils.GraphAdapter.create(someModel);
+const adapter = ConvergenceJointUtils.GraphAdapter.create(someObject);
 adapter.bind();
 adapter.unbind();
 ```

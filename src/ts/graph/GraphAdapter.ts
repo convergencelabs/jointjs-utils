@@ -1,4 +1,7 @@
-import {RealTimeModel, RealTimeObject} from "@convergence/convergence";
+import {
+  RealTimeModel, RealTimeObject, ObjectSetValueEvent, ObjectSetEvent,
+  ObjectRemoveEvent
+} from "@convergence/convergence";
 import {CellAdapter} from "./CellAdapter";
 import {DataConverter} from "./DataConverter";
 import {LinkAdapter} from "./LinkAdapter";
@@ -9,7 +12,7 @@ import * as joint from "jointjs";
  * The GraphAdapter class connects a JointJS Graph to a Convergence RealTimeModel.
  */
 export class GraphAdapter {
-  private _model: RealTimeModel;
+  private _graphObject: RealTimeObject;
   private _graph: joint.dia.Graph;
   private _remote: boolean;
   private _cellsModel: RealTimeObject;
@@ -17,29 +20,40 @@ export class GraphAdapter {
   private _bound: boolean;
 
   /**
-   * Constructs a new GraphAdapter from a supplied model. A new JointJS Graph will be
+   * Constructs a new GraphAdapter from a supplied object. A new JointJS Graph will be
    * created.
    *
-   * @param model
-   * @returns {GraphAdapter}
+   * @param object
+   *   The Convergence RealTimeObject to bind to, or a RealTimeModel whose
+   *   root element will be bound to.
+   *
+   * @returns
+   *   A new graph adapter bound to a new graph.
    */
-  static create(model: RealTimeModel): GraphAdapter {
+  static create(object: RealTimeObject | RealTimeModel): GraphAdapter {
     const graph = new joint.dia.Graph;
-    return new GraphAdapter(graph, model);
+    return new GraphAdapter(graph, object);
   }
 
   /**
    * Constructs a new GraphAdapter with the supplied JointJS graph and
-   * Convergence RealTimeModel.
+   * Convergence RealTimeObject. If the object passed in is a RealTimeModel,
+   * the graph will be bound to the root object.
    *
    * @param graph
    *   The JointJS Graph
    *
-   * @param model
-   *   The Convergence RealTimeModel
+   * @param object
+   *   The Convergence RealTimeObject to bind to, or a RealTimeModel whose
+   *   root element will be bound to.
    */
-  constructor(graph: joint.dia.Graph, model: RealTimeModel) {
-    this._model = model;
+  constructor(graph: joint.dia.Graph, object: RealTimeObject | RealTimeModel) {
+    if (object instanceof RealTimeModel) {
+      this._graphObject = object.root();
+    } else {
+      this._graphObject = object;
+    }
+
     this._graph = graph;
     this._remote = false;
     this._cellsModel = null;
@@ -50,13 +64,15 @@ export class GraphAdapter {
     this._onRemoteCellAdded = this._onRemoteCellAdded.bind(this);
     this._onLocalCellRemoved = this._onLocalCellRemoved.bind(this);
     this._onRemoteCellRemoved = this._onRemoteCellRemoved.bind(this);
+    this._onLocalCellsReset = this._onLocalCellsReset.bind(this);
+    this._onRemoteCellsSet = this._onRemoteCellsSet.bind(this);
     this._addCellAdapter = this._addCellAdapter.bind(this);
   }
 
   /**
    * Gets the JointJS Graph being used by this adapter.
    *
-   * @returns {*}
+   * @returns
    *   the JointJS Graph being used by this adapter.
    */
   public graph(): any {
@@ -66,11 +82,11 @@ export class GraphAdapter {
   /**
    * Gets the Convergence RealTimeModel being used by this adapter.
    *
-   * @returns {RealTimeModel}
+   * @returns {RealTimeObject}
    *   the JointJS Graph being used by this adapter.
    */
-  public model(): RealTimeModel {
-    return this._model;
+  public graphObject(): RealTimeObject {
+    return this._graphObject;
   }
 
   /**
@@ -95,17 +111,22 @@ export class GraphAdapter {
 
     this._bound = true;
 
-    const data: any = this._model.root().value();
+    const data: any = this._graphObject.value();
     this._graph.fromJSON(DataConverter.modelDataToGraphJson(data));
-    this._cellsModel = this._model.elementAt("cells") as RealTimeObject;
+    this._cellsModel = this._graphObject.elementAt("cells") as RealTimeObject;
 
     this._graph.getCells().forEach(this._addCellAdapter);
 
     this._graph.on("add", this._onLocalCellAdded);
     this._graph.on("remove", this._onLocalCellRemoved);
+    this._graph.on("reset", this._onLocalCellsReset);
 
-    this._cellsModel.on("set", this._onRemoteCellAdded);
-    this._cellsModel.on("remove", this._onRemoteCellRemoved);
+    this._cellsModel.on(RealTimeObject.Events.SET, this._onRemoteCellAdded);
+    this._cellsModel.on(RealTimeObject.Events.REMOVE, this._onRemoteCellRemoved);
+    this._cellsModel.on(RealTimeObject.Events.VALUE, this._onRemoteCellsSet);
+
+    this._graphObject.on(RealTimeObject.Events.DETACHED, this._graphDetached);
+    this._graphObject.on(RealTimeObject.Events.SET, this._remoteGraphSet);
   }
 
   /**
@@ -120,13 +141,18 @@ export class GraphAdapter {
 
     this._graph.off("add", this._onLocalCellAdded);
     this._graph.off("remove", this._onLocalCellRemoved);
+    this._graph.off("reset", this._onLocalCellsReset);
 
-    this._cellsModel.off("set", this._onRemoteCellAdded);
-    this._cellsModel.off("remove", this._onRemoteCellRemoved);
+    this._cellsModel.off(RealTimeObject.Events.SET, this._onRemoteCellAdded);
+    this._cellsModel.off(RealTimeObject.Events.REMOVE, this._onRemoteCellRemoved);
+    this._cellsModel.off(RealTimeObject.Events.VALUE, this._onRemoteCellsSet);
 
     Object.keys(this._cellAdapters).forEach(cellId => {
       this._cellAdapters[cellId].unbind();
     });
+
+    this._graphObject.off(RealTimeObject.Events.DETACHED, this._graphDetached);
+    this._graphObject.off(RealTimeObject.Events.SET, this._remoteGraphSet);
 
     this._cellAdapters = {};
 
@@ -140,7 +166,7 @@ export class GraphAdapter {
     }
   };
 
-  private _onRemoteCellAdded(event): void {
+  private _onRemoteCellAdded(event: ObjectSetEvent): void {
     this._remote = true;
     const id = event.key;
     const newCellData = event.value.value();
@@ -157,7 +183,7 @@ export class GraphAdapter {
     }
   };
 
-  private _onRemoteCellRemoved(event): void {
+  private _onRemoteCellRemoved(event: ObjectRemoveEvent): void {
     this._remote = true;
     const key = event.key;
     const cell = this._graph.getCell(key);
@@ -165,6 +191,37 @@ export class GraphAdapter {
     cell.remove();
     this._remote = false;
   };
+
+  private _onLocalCellsReset(event: any): void {
+    if (!this._remote) {
+      const cells: {[key: string]: any} = {};
+      event.models.forEach(cell => {
+        cells[cell.id] = cell.toJSON();
+      });
+      this._cellsModel.value(cells);
+    }
+  };
+
+  private _onRemoteCellsSet(event: ObjectSetValueEvent): void {
+    const cellsData = event.element.value();
+    const cells: any[] = [];
+    Object.keys(cellsData).forEach(id => {
+      cells.push(cellsData[id]);
+    });
+    this._graph.resetCells(cells);
+  }
+
+  private _graphDetached(): void {
+    if (this.isBound()) {
+      console.error("Graph object was detach whiled adapter was bound. Unbinding.");
+      this.unbind();
+    }
+  }
+
+  private _remoteGraphSet(event: ObjectSetEvent): void {
+    this.unbind();
+    this.bind();
+  }
 
   private _addCellAdapter(cell: any): void {
     const cellModel = this._cellsModel.get(cell.id) as RealTimeObject;

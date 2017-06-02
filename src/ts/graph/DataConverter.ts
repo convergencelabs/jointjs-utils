@@ -19,7 +19,7 @@ export class DataConverter {
     const initData = {
       cells: {}
     };
-    graphJson.cells.forEach(function (cell) {
+    graphJson.cells.forEach(cell => {
       initData.cells[cell.id] = cell;
     });
     return initData;
@@ -39,7 +39,7 @@ export class DataConverter {
     const graphJson = {
       cells: []
     };
-    Object.keys(modelData.cells).forEach(function (id) {
+    Object.keys(modelData.cells).forEach(id => {
       graphJson.cells.push(modelData.cells[id]);
     });
     return graphJson;
