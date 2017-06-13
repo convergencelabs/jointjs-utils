@@ -67,6 +67,7 @@ export class GraphAdapter {
     this._onLocalCellsReset = this._onLocalCellsReset.bind(this);
     this._onRemoteCellsSet = this._onRemoteCellsSet.bind(this);
     this._addCellAdapter = this._addCellAdapter.bind(this);
+    this._graphDetached = this._graphDetached.bind(this);
   }
 
   /**
