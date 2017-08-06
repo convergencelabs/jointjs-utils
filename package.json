@@ -1,13 +1,12 @@
 {
   "name": "@convergence/jointjs-utils",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A utility to bind a Convergence Model to a JointJS Graph",
   "keywords": [
     "Convergence",
     "JointJS"
   ],
   "main": "lib/index.js",
-  "browser": "browser/convergence-jointjs-utils.js",
   "types": "types/index.d.ts",
   "homepage": "http://convergencelabs.com",
   "bugs": "https://github.com/convergencelabs/jointjs-utils/issues",

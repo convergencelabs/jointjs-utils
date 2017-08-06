@@ -43,7 +43,6 @@ export class SelectionManager {
 
     this._remoteSelections = {};
     this._model = graphAdapter.graphObject().model();
-    this._selectionReference = null;
     this._paper = paper;
     this._colorManager = colorManager;
 
