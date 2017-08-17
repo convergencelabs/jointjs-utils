@@ -1,6 +1,6 @@
 {
   "name": "@convergence/jointjs-utils",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A utility to bind a Convergence Model to a JointJS Graph",
   "keywords": [
     "Convergence",
@@ -30,8 +30,8 @@
     "clean": "gulp clean"
   },
   "dependencies": {
-    "@convergence/color-assigner": "0.1.1",
-    "@convergence/convergence": "1.0.0-alpha.21",
+    "@convergence/color-assigner": "^0.1.1",
+    "@convergence/convergence": "^1.0.0-alpha.26",
     "jointjs": "https://github.com/clientIO/joint.git"
   },
   "devDependencies": {
