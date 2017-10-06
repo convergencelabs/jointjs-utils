@@ -54,7 +54,9 @@ export class CellAdapter {
           // This is a new local property added via jointjs. We must add it to the
           // real time model, so it syncs out.
           const value = this._cell.get(key);
-          this._cellModel.set(key, value);
+          if (value !== undefined) {
+            this._cellModel.set(key, value);
+          }
           this._bindValue(key);
         });
     });

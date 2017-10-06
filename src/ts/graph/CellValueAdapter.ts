@@ -88,7 +88,7 @@ export class CellValueAdapter {
       } else {
         this._cellModel.get(this._propertyName).value(value);
       }
-    } else {
+    } else if (value !== undefined) {
       // This is the first time the property is being set so
       // we need to set the property in the parent, which will
       // create the sub element. We need to then bind to it.
