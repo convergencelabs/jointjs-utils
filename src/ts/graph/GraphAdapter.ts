@@ -4,8 +4,6 @@ import {
 } from "@convergence/convergence";
 import {CellAdapter} from "./CellAdapter";
 import {DataConverter} from "./DataConverter";
-import {LinkAdapter} from "./LinkAdapter";
-import {ElementAdapter} from "./ElementAdapter";
 import * as joint from "jointjs";
 
 /**
@@ -226,12 +224,7 @@ export class GraphAdapter {
 
   private _addCellAdapter(cell: any): void {
     const cellModel = this._cellsModel.get(cell.id) as RealTimeObject;
-    let adapter: CellAdapter = null;
-    if (cell instanceof joint.dia.Link) {
-      adapter = new LinkAdapter(cell, cellModel);
-    } else if (cell instanceof joint.dia.Element) {
-      adapter = new ElementAdapter(cell, cellModel);
-    }
+    let adapter: CellAdapter = new CellAdapter(cell, cellModel);;
     adapter.bind();
     this._cellAdapters[cell.id] = adapter;
   };

@@ -10,11 +10,11 @@ export class CellValueAdapter {
   private _propertyName: string;
   private _valueElement: RealTimeElement<any>;
 
-  constructor(cell: joint.dia.Cell, cellModel: RealTimeObject, eventName: string, propertyName: string) {
+  constructor(cell: joint.dia.Cell, cellModel: RealTimeObject, propertyName: string) {
     this._remote = false;
     this._cell = cell;
     this._cellModel = cellModel;
-    this._eventName = eventName;
+    this._eventName = `change:${propertyName}`;
     this._propertyName = propertyName;
     this._valueElement = null;
 
@@ -79,7 +79,6 @@ export class CellValueAdapter {
       return;
     }
 
-    // FIXME need ability to rate limit this
     if (this._cellModel.hasKey(this._propertyName)) {
       // The cell model already has this property so we want to
       // updated the existing sub element in the model.
