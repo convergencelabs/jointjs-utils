@@ -1,6 +1,6 @@
 {
   "name": "@convergence/jointjs-utils",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "A utility to bind a Convergence Model to a JointJS Graph",
   "keywords": [
     "Convergence",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@convergence/color-assigner": "^0.1.1",
-    "@convergence/convergence": "^1.0.0-alpha.28",
+    "@convergence/convergence": "^1.0.0-alpha.29",
     "jointjs": "^1.1.0"
   },
   "devDependencies": {
