@@ -1,4 +1,4 @@
-import {RealTimeObject} from "@convergence/convergence";
+import {ObjectSetEvent, RealTimeArray, RealTimeContainerElement, RealTimeObject} from "@convergence/convergence";
 import * as joint from "jointjs";
 
 // TODO The attributes are basically just getting replaced. We should see if it is a string attribute
@@ -33,7 +33,7 @@ export class CellAttributesAdapter {
     if (!this._remote && details.propertyPath !== undefined) {
       const path = details.propertyPath.split("/");
       if (this._cellModel.elementAt(path).type() === "undefined") {
-        this._createAttributePathAndValue(path, details.propertyValue);
+        this._setAttributeValue(path, details.propertyValue);
       } else {
         this._cellModel.elementAt(path).value(details.propertyValue);
       }
@@ -42,20 +42,62 @@ export class CellAttributesAdapter {
 
   private _onRemoteAttributeChanged = (event) => {
     this._remote = true;
-    const propertyPath = event.relativePath.join("/");
-    this._cell.attr(propertyPath, event.childEvent.element.value());
+
+    const path = event.relativePath.slice(0);
+    const childEvent = event.childEvent;
+
+    if (childEvent instanceof ObjectSetEvent) {
+      const value = childEvent.value.value();
+      path.push(childEvent.key);
+      const propertyPath = path.join("/");
+      this._cell.attr(propertyPath, value);
+    }
+
     this._remote = false;
   };
 
-  private _createAttributePathAndValue(path, value) {
-    let cur: RealTimeObject = this._cellModel;
-    for (let i = 0; i < path.length - 1; i++) {
-      const key = path[i];
-      if (!cur.hasKey(key)) {
-        cur.set(key, {});
+
+  private _setAttributeValue(path, value) {
+    let curObject: RealTimeContainerElement<any> = this._cellModel;
+    let curPath = path.slice(0);
+
+    while (curPath.length > 1) {
+      const pathSegment = curPath[0];
+      if (curObject.elementAt(pathSegment).type() === "undefined") {
+        break;
+      } else {
+        curPath.shift()
+        curObject = curObject.elementAt(pathSegment) as any as RealTimeContainerElement<any>;
       }
-      cur = cur.get(key) as RealTimeObject;
     }
-    cur.set(path[path.length - 1], value);
+
+    const prop = curPath.shift();
+    const val = this.createValue(curPath, value);
+
+    if (curObject instanceof RealTimeObject) {
+      curObject.set(prop, val);
+    } else if (curObject instanceof RealTimeArray) {
+      curObject.set(prop, val);
+    }
+  }
+
+  private createValue(path, value): any {
+    let v;
+
+    if (path.length === 0) {
+      v = value;
+    } else {
+      const pathSegment = path.shift();
+
+      if (isNaN(pathSegment)) {
+        v = {};
+      } else {
+        v = [];
+      }
+
+      v[pathSegment] = this.createValue(path, value);
+    }
+
+    return v;
   }
 }
