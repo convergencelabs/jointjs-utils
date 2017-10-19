@@ -1,4 +1,9 @@
-import {ObjectSetEvent, RealTimeArray, RealTimeContainerElement, RealTimeObject} from "@convergence/convergence";
+import {
+  ArraySetValueEvent,
+  BooleanSetValueEvent, DateSetValueEvent, NumberSetValueEvent,
+  ObjectSetEvent, ObjectSetValueEvent, RealTimeArray, RealTimeContainerElement, RealTimeObject,
+  StringSetValueEvent
+} from "@convergence/convergence";
 import * as joint from "jointjs";
 
 // TODO The attributes are basically just getting replaced. We should see if it is a string attribute
@@ -49,8 +54,16 @@ export class CellAttributesAdapter {
     if (childEvent instanceof ObjectSetEvent) {
       const value = childEvent.value.value();
       path.push(childEvent.key);
-      const propertyPath = path.join("/");
-      this._cell.attr(propertyPath, value);
+      this._cell.attr(path, value);
+    } else if (childEvent instanceof StringSetValueEvent ||
+      childEvent instanceof BooleanSetValueEvent ||
+      childEvent instanceof NumberSetValueEvent ||
+      childEvent instanceof DateSetValueEvent ||
+      childEvent instanceof ObjectSetValueEvent ||
+      childEvent instanceof ArraySetValueEvent
+    ) {
+      const value = childEvent.element.value();
+      this._cell.attr(path, value);
     }
 
     this._remote = false;
