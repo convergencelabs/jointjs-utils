@@ -1,12 +1,15 @@
 import * as $ from 'jquery';
 import * as joint from "jointjs";
 
+export type StyleCallback = (svgDoc: Document, color: string) => void;
+
 /**
  * Defines the options for the {RemotePointer} class.
  */
 export interface RemotePointerOptions extends Backbone.ViewOptions<any> {
   paper: joint.dia.Paper;
   color: string;
+  styleCallback?: StyleCallback
   cursorSvgUrl: string;
 }
 
@@ -33,7 +36,6 @@ export class RemotePointer extends joint.mvc.View<any> {
 
   public init() {
     this._updateScale = this._updateScale.bind(this);
-
     this._paper = this.options.paper;
     this._paper.on("scale", this._updateScale);
     this._updateScale();
@@ -44,9 +46,13 @@ export class RemotePointer extends joint.mvc.View<any> {
     this.$el.attr("data", this.options.cursorSvgUrl);
     this.$el.appendTo(this._paper.el);
     el.addEventListener("load", () => {
-      const svgDoc = el.contentDocument;
-      const pointer = $(svgDoc.getElementById("cursor"));
-      pointer.css("fill", this.options.color);
+      const svgDoc: Document = el.contentDocument;
+      if (typeof this.options.styleCallback === "function") {
+        this.options.styleCallback(svgDoc, this.options.color);
+      } else {
+        const pointer = $(svgDoc.getElementsByTagName("path"));
+        pointer.css("fill", this.options.color);
+      }
     }, false);
     return this;
   }

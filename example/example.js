@@ -1,4 +1,4 @@
-const graph = new joint.dia.Graph;
+const graph = new joint.dia.Graph();
 const paper = new joint.dia.Paper({
   el: document.getElementById('paper'),
   width: 800,

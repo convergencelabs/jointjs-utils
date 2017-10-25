@@ -1,6 +1,6 @@
 import {Activity} from "@convergence/convergence";
 import {Subscription} from "rxjs";
-import {RemotePointer} from "./RemotePointer";
+import {RemotePointer, StyleCallback} from "./RemotePointer";
 import {rateLimit, RateLimitedFunction} from "../util/rateLimit";
 import {ActivityColorManager} from "../util/ActivityColorManager";
 import * as joint from "jointjs";
@@ -20,6 +20,7 @@ export class PointerManager {
   private _scale: {sx: number, sy: number};
   private _cursorSvgUrl: string;
   private _disposed: boolean;
+  private _styleCallback: StyleCallback;
 
   /**
    * Constructs a new PointerManager.
@@ -37,7 +38,11 @@ export class PointerManager {
    * @param cursorSvgUrl
    *   The url of the svg data to use to render the remote cursors.
    */
-  constructor(paper: joint.dia.Paper, activity: Activity, colorManager: ActivityColorManager, cursorSvgUrl: string) {
+  constructor(paper: joint.dia.Paper,
+              activity: Activity,
+              colorManager: ActivityColorManager,
+              cursorSvgUrl: string,
+              styleCallback?: StyleCallback) {
     this._paper = paper;
     this._activity = activity;
     this._colorManager = colorManager;
@@ -45,6 +50,7 @@ export class PointerManager {
     this._activitySubscription = null;
     this._mouseMoveCallback = null;
     this._cursorSvgUrl = cursorSvgUrl;
+    this._styleCallback = styleCallback;
 
     this._onMouseLeave = this._onMouseLeave.bind(this);
     this._onMouseMove = this._onMouseMove.bind(this);
@@ -169,7 +175,7 @@ export class PointerManager {
 
   private _addRemotePointer(participant): void {
     const color = this._colorManager.color(participant.sessionId);
-    const remotePointer = new RemotePointer({paper: this._paper, color: color, cursorSvgUrl: this._cursorSvgUrl});
+    const remotePointer = new RemotePointer({paper: this._paper, color: color, cursorSvgUrl: this._cursorSvgUrl, styleCallback: this._styleCallback});
     remotePointer.render();
     const coords = participant.state.get("pointer");
     if (coords) {
