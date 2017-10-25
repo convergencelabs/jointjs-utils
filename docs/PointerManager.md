@@ -38,6 +38,19 @@ const pointerManager = new ConvergenceJointUtils.PointerManager(
   paper, activity, colorManager, cursorSvgUrl);
 ```
 
+## Custom SVG and Styling
+If you would like to supply your own svg icon you can do so by supplying the cursorSvgUrl parameter. If you do this you may need to change how the adapter colors the svg based on the user. An additional callback parameter can be passed to the constructor to accomplish this. For example:
+
+```JavaScript
+function styleCallback(svgDoc, color) {
+  const paths = $(svgDoc.getElementsByTagName("path"));
+  paths.css("fill", color);
+}
+
+const pointerManager = new ConvergenceJointUtils.PointerManager(
+  paper, activity, colorManager, cursorSvgUrl, styleCallback);
+```
+
 ## Prototype Methods
 <a name="dispose"></a>
 ## `dispose()`
