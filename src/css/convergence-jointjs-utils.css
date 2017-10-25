@@ -1,0 +1,12 @@
+.joint-remote-pointer {
+  position: absolute;
+  height: 18px;
+  z-index: 99;
+}
+
+.joint-remote-selection-item {
+  border: 1px dashed;
+  position: absolute;
+  box-shadow: 0 0 1em;
+  pointer-events: none;
+}
