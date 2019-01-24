@@ -1,7 +1,8 @@
 import {RemoteSelectionItem} from "./RemoteSelectionItem";
-import {RealTimeObject, ElementReference} from "@convergence/convergence";
+import {RealTimeObject, ElementReference, RealTimeElement} from "@convergence/convergence";
 import ViewOptions = Backbone.ViewOptions;
 import * as joint from "jointjs";
+import {ReferenceChangedEvent} from "@convergence/convergence/typings/model/reference/events";
 
 export interface RemoteSelectionOptions extends ViewOptions<any> {
   reference: ElementReference,
@@ -29,27 +30,29 @@ export class RemoteSelection extends joint.mvc.View<any> {
 
     this._items = [];
 
-    this.$el.appendTo(this.options.paper.el);
+    this.$el.appendTo((this as any).options.paper.el);
     this.$el.empty();
 
-    this.options.reference.on("set", this._onSet);
-    this.options.reference.on("clear", this._onClear);
-    this.options.reference.on("disposed", this._onDisposed);
+    (this as any).options.reference.on("set", this._onSet);
+    (this as any).options.reference.on("clear", this._onClear);
+    (this as any).options.reference.on("disposed", this._onDisposed);
 
-    this._setCells(this.options.reference.values());
+    this._setCells((this as any).options.reference.values());
   }
 
   public remove(): RemoteSelection {
-    this.options.reference.off("set", this._onSet);
-    this.options.reference.on("clear", this._onClear);
-    this.options.reference.on("disposed", this._onDisposed);
+    (this as any).options.reference.off("set", this._onSet);
+    (this as any).options.reference.on("clear", this._onClear);
+    (this as any).options.reference.on("disposed", this._onDisposed);
 
     this.$el.remove();
     return this;
   }
 
-  private _onSet(event) {
-    this._setCells(event.src.values())
+  private _onSet(event: ReferenceChangedEvent<RealTimeObject[]>) {
+    const src = event.src as ElementReference;
+    const values = src.values() as RealTimeObject[];
+    this._setCells(values)
   }
 
   private _onClear() {
@@ -60,15 +63,15 @@ export class RemoteSelection extends joint.mvc.View<any> {
     this.remove();
   }
 
-  private _setCells(cellModels: RealTimeObject): void {
+  private _setCells(cellModels: RealTimeObject[]): void {
     this._clear();
     cellModels.forEach(cellModel => {
-      const cell = this.options.paper.model.getCell(cellModel.path().pop());
+      const cell = (this as any).options.paper.model.getCell(cellModel.path().pop());
       this._items.push(new RemoteSelectionItem({
-        paper: this.options.paper,
+        paper: (this as any).options.paper,
         parent: this.$el,
         cell: cell,
-        color: this.options.color
+        color: (this as any).options.color
       }));
     });
   }

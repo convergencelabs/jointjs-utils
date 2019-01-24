@@ -1,6 +1,7 @@
-import * as ColorAssigner from "@convergence/color-assigner";
+import {ColorAssigner} from "@convergence/color-assigner";
 import {Activity} from "@convergence/convergence";
 import {Subscription} from "rxjs";
+import {filter} from "rxjs/operators";
 
 const defaultColors: string[] = ['mediumseagreen', 'cornflowerblue', 'mediumpurple', 'coral', 'gold', 'plum', 'lightseagreen',
   'mediumorchid', 'aquamarine', 'lightskyblue', 'violet', 'teal', 'lightsalmon', 'orange',
@@ -27,11 +28,11 @@ export class ActivityColorManager {
     this._colorAssigner = new ColorAssigner(colors);
 
     this._joinedSubscription = activity.events()
-      .filter(e => e.name === "session_joined")
+      .pipe(filter(e => e.name === "session_joined"))
       .subscribe(e => this._addSession(e.sessionId));
 
     this._leftSubscription = activity.events()
-      .filter(e => e.name === "session_left")
+      .pipe(filter(e => e.name === "session_left"))
       .subscribe(e => this._removeSession(e.sessionId));
 
     this._disposed = false;

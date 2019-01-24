@@ -36,22 +36,22 @@ export class RemotePointer extends joint.mvc.View<any> {
 
   public init() {
     this._updateScale = this._updateScale.bind(this);
-    this._paper = this.options.paper;
+    this._paper = (this as any).options.paper;
     this._paper.on("scale", this._updateScale);
     this._updateScale();
   }
 
   public render(): RemotePointer {
     const el = this.el;
-    this.$el.attr("data", this.options.cursorSvgUrl);
+    this.$el.attr("data", (this as any).options.cursorSvgUrl);
     this.$el.appendTo(this._paper.el);
     el.addEventListener("load", () => {
       const svgDoc: Document = el.contentDocument;
-      if (typeof this.options.styleCallback === "function") {
-        this.options.styleCallback(svgDoc, this.options.color);
+      if (typeof (this as any).options.styleCallback === "function") {
+        (this as any).options.styleCallback(svgDoc, (this as any).options.color);
       } else {
         const pointer = $(svgDoc.getElementsByTagName("path"));
-        pointer.css("fill", this.options.color);
+        pointer.css("fill", (this as any).options.color);
       }
     }, false);
     return this;

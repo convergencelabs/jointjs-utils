@@ -15,7 +15,7 @@ export class CellAttributesAdapter {
 
   private _remote: boolean;
   private _cell: joint.dia.Cell;
-  private _cellModel: RealTimeObject;
+  private readonly _cellModel: RealTimeObject;
 
   constructor(cell: joint.dia.Cell, cellModel: RealTimeObject) {
     this._remote = false;

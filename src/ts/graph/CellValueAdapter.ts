@@ -6,8 +6,8 @@ export class CellValueAdapter {
   private _remote: boolean;
   private _cell: joint.dia.Cell;
   private _cellModel: RealTimeObject;
-  private _eventName: string;
-  private _propertyName: string;
+  private readonly _eventName: string;
+  private readonly _propertyName: string;
   private _valueElement: RealTimeElement<any>;
 
   constructor(cell: joint.dia.Cell, cellModel: RealTimeObject, propertyName: string) {
@@ -74,7 +74,7 @@ export class CellValueAdapter {
     this._cell.off(this._eventName, this._onLocalGraphEvent);
   }
 
-  private _onLocalGraphEvent(cell: any, value: any): void {
+  private _onLocalGraphEvent(_: any, value: any): void {
     if (this._remote) {
       return;
     }

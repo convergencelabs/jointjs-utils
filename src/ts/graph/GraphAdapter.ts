@@ -10,8 +10,8 @@ import * as joint from "jointjs";
  * The GraphAdapter class connects a JointJS Graph to a Convergence RealTimeModel.
  */
 export class GraphAdapter {
-  private _graphObject: RealTimeObject;
-  private _graph: joint.dia.Graph;
+  private readonly _graphObject: RealTimeObject;
+  private readonly _graph: joint.dia.Graph;
   private _remote: boolean;
   private _cellsModel: RealTimeObject;
   private _cellAdapters: {[key: string]: CellAdapter};

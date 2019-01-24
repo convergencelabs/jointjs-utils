@@ -11,16 +11,16 @@ import * as joint from "jointjs";
  */
 export class PointerManager {
 
-  private _paper: joint.dia.Paper;
+  private readonly _paper: joint.dia.Paper;
   private _activity: Activity;
   private _colorManager: ActivityColorManager;
-  private _remotePointers = {};
+  private readonly _remotePointers = {};
   private _activitySubscription: Subscription;
-  private _mouseMoveCallback: RateLimitedFunction<(eventObject: JQueryMouseEventObject) => any>;
+  private _mouseMoveCallback: RateLimitedFunction<(eventObject: JQuery.Event) => any>;
   private _scale: {sx: number, sy: number};
-  private _cursorSvgUrl: string;
+  private readonly _cursorSvgUrl: string;
   private _disposed: boolean;
-  private _styleCallback: StyleCallback;
+  private readonly _styleCallback: StyleCallback;
 
   /**
    * Constructs a new PointerManager.
@@ -92,8 +92,8 @@ export class PointerManager {
     this._onScaleUpdated();
 
     this._mouseMoveCallback = rateLimit(this._onMouseMove, 40, true);
-    this._paper.$el.mousemove(this._mouseMoveCallback.func);
-    this._paper.$el.mouseleave(this._onMouseLeave);
+    this._paper.$el.on("mousemove", this._mouseMoveCallback.func);
+    this._paper.$el.on("mouseleave", this._onMouseLeave);
   }
 
   /**
@@ -160,12 +160,12 @@ export class PointerManager {
     }
   }
 
-  private _onMouseLeave(e): void {
+  private _onMouseLeave(e: JQuery.Event): void {
     this._mouseMoveCallback.clear();
     this._activity.removeState("pointer");
   }
 
-  private _onMouseMove(e): void {
+  private _onMouseMove(e: JQuery.Event): void {
     const parentOffset = this._paper.$el.offset();
     const relX = (e.pageX - parentOffset.left) / this._scale.sx;
     const relY = (e.pageY - parentOffset.top) / this._scale.sy;

@@ -1,8 +1,14 @@
 import {RemoteSelection} from "./RemoteSelection";
-import {RealTimeModel, LocalElementReference, RemoteReferenceCreatedEvent} from "@convergence/convergence";
-import {ActivityColorManager} from "../util/ActivityColorManager";
-import {GraphAdapter} from "../graph/GraphAdapter";
+import {
+  RealTimeModel,
+  LocalElementReference,
+  RemoteReferenceCreatedEvent,
+  ElementReference
+} from "@convergence/convergence";
+import {ActivityColorManager} from "../util/";
+import {GraphAdapter} from "../graph/";
 import * as joint from "jointjs";
+import {ReferenceClearedEvent} from "@convergence/convergence/typings/model/reference/events";
 
 /**
  * The SelectionManager provides remote selection awareness rendering remote
@@ -14,7 +20,7 @@ export class SelectionManager {
 
   private _model: RealTimeModel;
   private _selectionReference: LocalElementReference;
-  private _paper: joint.dia.Paper;
+  private readonly _paper: joint.dia.Paper;
   private _colorManager: ActivityColorManager;
   private _disposed: boolean;
   private _remoteSelections: {[key: string]: RemoteSelection};
@@ -105,11 +111,11 @@ export class SelectionManager {
     this._selectionReference.set(cellModels);
   }
 
-  private _handleReferenceCreated(event): void {
+  private _handleReferenceCreated(event: RemoteReferenceCreatedEvent): void {
     this._processReference(event.reference)
   }
 
-  private _processReference(reference): void {
+  private _processReference(reference: ElementReference): void {
     if (!reference.isLocal()) {
       const color: string = this._colorManager.color(reference.sessionId());
       const remoteSelection = new RemoteSelection({reference: reference, color: color, paper: this._paper});

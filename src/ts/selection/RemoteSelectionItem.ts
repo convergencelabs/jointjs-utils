@@ -18,15 +18,15 @@ export class RemoteSelectionItem extends joint.mvc.View<any> {
 
   init() {
     this.update = this.update.bind(this);
-    this.options.cell.on("change", this.update);
-    this.$el.appendTo(this.options.parent);
+    (this as any).options.cell.on("change", this.update);
+    this.$el.appendTo((this as any).options.parent);
     this.update();
   }
 
   update() {
     // The transformation matrix.
-    const ctm = this.options.paper.viewport.getCTM();
-    const cellBBox = this.options.cell.getBBox();
+    const ctm = (this as any).options.paper.viewport.getCTM();
+    const cellBBox = (this as any).options.cell.getBBox();
 
     cellBBox.x *= ctm.a;
     cellBBox.x += ctm.e;
@@ -35,11 +35,11 @@ export class RemoteSelectionItem extends joint.mvc.View<any> {
     cellBBox.width *= ctm.a;
     cellBBox.height *= ctm.d;
 
-    const angle = joint.g.normalizeAngle(this.options.cell.get("angle") || 0);
+    const angle = joint.g.normalizeAngle((this as any).options.cell.get("angle") || 0);
     const rotateStyle = "rotate(" + angle + "deg)";
 
     this.$el.css({
-      color: this.options.color,
+      color: (this as any).options.color,
       width: cellBBox.width + 4,
       height: cellBBox.height + 4,
       left: cellBBox.x - 3,
@@ -51,7 +51,7 @@ export class RemoteSelectionItem extends joint.mvc.View<any> {
   }
 
   remove(): RemoteSelectionItem {
-    this.options.cell.off("change", this.update);
+    (this as any).options.cell.off("change", this.update);
     this.$el.remove();
     return this;
   }

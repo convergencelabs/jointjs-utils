@@ -1,4 +1,4 @@
-import {ObjectSetEvent, RealTimeObject} from "@convergence/convergence";
+import {ModelChangedEvent, ObjectSetEvent, RealTimeObject} from "@convergence/convergence";
 import {CellValueAdapter} from "./CellValueAdapter";
 import {CellAttributesAdapter} from "./CellAttributesAdapter";
 import * as joint from "jointjs";
@@ -8,8 +8,8 @@ import * as joint from "jointjs";
  */
 export class CellAdapter {
 
-  private _cell: joint.dia.Cell;
-  private _cellModel: RealTimeObject;
+  private readonly _cell: joint.dia.Cell;
+  private readonly _cellModel: RealTimeObject;
   private _cellAttributesAdapter: CellAttributesAdapter;
   private _cellValueAdapters: CellValueAdapter[];
 
@@ -72,7 +72,7 @@ export class CellAdapter {
         this._bindValue(key);
       }
     });
-  }
+   }
 
   /**
    * Discontinues the two-way data binding between the Cell and RealTimeObject.

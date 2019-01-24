@@ -1,8 +1,7 @@
 const path = require('path');
-const webpack = require('webpack');
-const { CheckerPlugin } = require('awesome-typescript-loader');
 
 module.exports = {
+  mode: "production",
   context: path.resolve(__dirname, './src/ts'),
   entry: {
     app: './index.ts'
@@ -11,25 +10,28 @@ module.exports = {
     path: path.resolve(__dirname, './build'),
     filename: 'convergence-jointjs-utils.js',
     libraryTarget: "umd",
-    library: "ConvergenceJointUtils"
+    library: "ConvergenceJointUtils",
+    umdNamedDefine: true
   },
-  resolve: {
-    extensions: ['.ts']
+  optimization: {
+    minimize: false
   },
   module: {
     rules: [
       {
         test: /\.ts$/,
-        loader: 'awesome-typescript-loader'
+        use: 'ts-loader',
+        exclude: /node_modules/
       }
     ]
   },
-  plugins: [
-    new CheckerPlugin()
-  ],
+  resolve: {
+    extensions: [ ".tsx", ".ts", ".js" ],
+  },
+  plugins: [],
   externals: {
     "@convergence/convergence": "Convergence",
-    "@convergence/color-assigner": "ColorAssigner",
+    "@convergence/color-assigner": "ConvergenceColorAssigner",
     "jquery": "$",
     "jointjs": "joint"
   }
