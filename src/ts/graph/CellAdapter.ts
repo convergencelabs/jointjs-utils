@@ -1,4 +1,4 @@
-import {ModelChangedEvent, ObjectSetEvent, RealTimeObject} from "@convergence/convergence";
+import {ObjectSetEvent, RealTimeObject} from "@convergence/convergence";
 import {CellValueAdapter} from "./CellValueAdapter";
 import {CellAttributesAdapter} from "./CellAttributesAdapter";
 import * as joint from "jointjs";

@@ -16,7 +16,7 @@ import insert from 'gulp-insert';
 const filename = "convergence-jointjs-utils";
 const distDir = "./dist";
 
-const copyFiles = () => src(["README.md", "LICENSE.txt", 'package.json']).pipe(dest(distDir));
+const copyFiles = () => src(["README.md", "LICENSE", 'package.json']).pipe(dest(distDir));
 const copyCss = () => src(["src/css/**/*"]).pipe(dest(distDir + "/css"));
 const copyImages = () => src(["src/img/**/*"]).pipe(dest(distDir + "/img"));
 const copyTypes = () => src(["src/types/**/*"]).pipe(dest(distDir + "/types/"));

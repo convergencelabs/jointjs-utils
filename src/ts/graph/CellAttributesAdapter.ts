@@ -79,7 +79,7 @@ export class CellAttributesAdapter {
       if (curObject.elementAt(pathSegment).type() === "undefined") {
         break;
       } else {
-        curPath.shift()
+        curPath.shift();
         curObject = curObject.elementAt(pathSegment) as any as RealTimeContainerElement<any>;
       }
     }

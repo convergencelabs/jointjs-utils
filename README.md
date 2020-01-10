@@ -1,3 +1,7 @@
+<div align="center">
+  <img alt="Convergence Logo" height="80" src="https://convergence.io/assets/img/convergence-logo.png" >
+</div>
+
 # Convergence JointJS Utils
 [![Build Status](https://travis-ci.org/convergencelabs/jointjs-utils.svg?branch=master)](https://travis-ci.org/convergencelabs/jointjs-utils)
 
@@ -16,6 +20,7 @@ Documentation can be found [Here](docs).
 # Dependencies
 This library depends on the following libraries:
 
+* **Convergence Server**: The Convergence Server (see: https://convergence.io/quickstart/)
 * **@convergence/convergence**: The main Convergence client API.
 * **@convergence/color-assigner**: A utility for assigning colors to unique resources.
 * **jointjs**: The open source JointJS library
@@ -35,4 +40,4 @@ To run the example you must first:
 3. Open the example/index.html file in your browser
 
 
-Note: to run the example you must have a Convergence Account.
+Note: to run the example you must have a Convergence Server.

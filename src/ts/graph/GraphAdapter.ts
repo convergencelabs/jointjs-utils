@@ -1,6 +1,9 @@
 import {
-  RealTimeModel, RealTimeObject, ObjectSetValueEvent, ObjectSetEvent,
-  ObjectRemoveEvent
+  ObjectRemoveEvent,
+  ObjectSetEvent,
+  ObjectSetValueEvent,
+  RealTimeModel,
+  RealTimeObject
 } from "@convergence/convergence";
 import {CellAdapter} from "./CellAdapter";
 import {DataConverter} from "./DataConverter";
@@ -217,17 +220,17 @@ export class GraphAdapter {
     }
   }
 
-  private _remoteGraphSet(event: ObjectSetEvent): void {
+  private _remoteGraphSet(_: ObjectSetEvent): void {
     this.unbind();
     this.bind();
   }
 
   private _addCellAdapter(cell: any): void {
     const cellModel = this._cellsModel.get(cell.id) as RealTimeObject;
-    let adapter: CellAdapter = new CellAdapter(cell, cellModel);;
+    let adapter: CellAdapter = new CellAdapter(cell, cellModel);
     adapter.bind();
     this._cellAdapters[cell.id] = adapter;
-  };
+  }
 
   private _removeCellAdapter(cell: any): void {
     const adapter = this._cellAdapters[cell.id];

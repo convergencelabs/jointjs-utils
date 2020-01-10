@@ -8,7 +8,7 @@ export class CellValueAdapter {
   private _cellModel: RealTimeObject;
   private readonly _eventName: string;
   private readonly _propertyName: string;
-  private _valueElement: RealTimeElement<any>;
+  private _valueElement: RealTimeElement;
 
   constructor(cell: joint.dia.Cell, cellModel: RealTimeObject, propertyName: string) {
     this._remote = false;

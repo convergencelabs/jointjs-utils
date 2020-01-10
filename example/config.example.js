@@ -4,7 +4,7 @@
 //
 
 //
-// 1. Obtain a Convergence account and note your username.
+// 1. Configure a Convergence server instance. (see https://convergence.io/quickstart/)
 //
 // 2. Create a domain, not the domain id, and ensure that anonymous authentication is enabled.
 //
@@ -14,4 +14,4 @@
 //    domain you wish to use.
 //
 
-const DOMAIN_URL = "https://api.convergence.io/realtime/domain/<convergence-username>/<domain-id>";
+const DOMAIN_URL = "https://localhost:8000/realtime/<convergence-username>/<domain-id>";

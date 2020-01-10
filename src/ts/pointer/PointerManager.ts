@@ -2,7 +2,7 @@ import {Activity} from "@convergence/convergence";
 import {Subscription} from "rxjs";
 import {RemotePointer, StyleCallback} from "./RemotePointer";
 import {rateLimit, RateLimitedFunction} from "../util/rateLimit";
-import {ActivityColorManager} from "../util/ActivityColorManager";
+import {ActivityColorManager} from "../util/";
 import * as joint from "jointjs";
 
 /**
@@ -37,6 +37,9 @@ export class PointerManager {
    *
    * @param cursorSvgUrl
    *   The url of the svg data to use to render the remote cursors.
+   *
+   * @param styleCallback
+   *   A callback to set the style of cursors.
    */
   constructor(paper: joint.dia.Paper,
               activity: Activity,
@@ -160,7 +163,7 @@ export class PointerManager {
     }
   }
 
-  private _onMouseLeave(e: JQuery.Event): void {
+  private _onMouseLeave(_: JQuery.Event): void {
     this._mouseMoveCallback.clear();
     this._activity.removeState("pointer");
   }

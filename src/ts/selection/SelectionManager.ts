@@ -1,14 +1,13 @@
 import {RemoteSelection} from "./RemoteSelection";
 import {
-  RealTimeModel,
+  ElementReference,
   LocalElementReference,
-  RemoteReferenceCreatedEvent,
-  ElementReference
+  RealTimeModel,
+  RemoteReferenceCreatedEvent
 } from "@convergence/convergence";
 import {ActivityColorManager} from "../util/";
 import {GraphAdapter} from "../graph/";
 import * as joint from "jointjs";
-import {ReferenceClearedEvent} from "@convergence/convergence/typings/model/reference/events";
 
 /**
  * The SelectionManager provides remote selection awareness rendering remote
@@ -28,14 +27,14 @@ export class SelectionManager {
   /**
    * Creates a new SelectionManager.
    *
-   * @param paper {joint.dia.Paper}
+   * @param paper
    *   Remote selections are rendered on this paper.  The paper's model (graph) must be
    *   the same graph that the graphAdapter is bound to.
    *
-   * @param graphAdapter {GraphAdapter}
+   * @param graphAdapter
    *   A GraphAdapter that binds a graph to a RealTimeModel. The GraphAdapter must be bound.
    *
-   * @param colorManager {ActivityColorManager}
+   * @param colorManager
    *   Manages the colors of the remote selections.
    */
   constructor(paper: any, graphAdapter: GraphAdapter, colorManager: ActivityColorManager) {
@@ -118,8 +117,11 @@ export class SelectionManager {
   private _processReference(reference: ElementReference): void {
     if (!reference.isLocal()) {
       const color: string = this._colorManager.color(reference.sessionId());
-      const remoteSelection = new RemoteSelection({reference: reference, color: color, paper: this._paper});
-      this._remoteSelections[reference.sessionId()] = remoteSelection;
+      this._remoteSelections[reference.sessionId()] = new RemoteSelection({
+        reference: reference,
+        color: color,
+        paper: this._paper
+      });
       reference.on("disposed", () => {
         delete this._remoteSelections[reference.sessionId()];
       });

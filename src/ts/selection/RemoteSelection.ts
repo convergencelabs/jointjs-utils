@@ -1,8 +1,8 @@
 import {RemoteSelectionItem} from "./RemoteSelectionItem";
-import {RealTimeObject, ElementReference, RealTimeElement} from "@convergence/convergence";
-import ViewOptions = Backbone.ViewOptions;
+import {ElementReference, RealTimeObject} from "@convergence/convergence";
 import * as joint from "jointjs";
 import {ReferenceChangedEvent} from "@convergence/convergence/typings/model/reference/events";
+import ViewOptions = Backbone.ViewOptions;
 
 export interface RemoteSelectionOptions extends ViewOptions<any> {
   reference: ElementReference,
