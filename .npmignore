@@ -1,11 +1,5 @@
-downloads
-misc
 node_modules
-test
-tools
 .idea
-component.json
-gulpfile.babel.js
 .npmignore
 .gitignore
 npm-debug.log

@@ -8,12 +8,8 @@ export interface RemoteSelectionItemOptions extends Backbone.ViewOptions<any> {
 }
 
 export class RemoteSelectionItem extends joint.mvc.View<any> {
-
-  get tagName(): string {return 'div';}
-  get className(): string {return 'remote-selection-item';}
-
   constructor(options: RemoteSelectionItemOptions) {
-    super(options);
+    super({...options, tagName: 'div', className: 'remote-selection-item' });
   }
 
   init() {

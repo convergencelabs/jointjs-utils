@@ -16,7 +16,7 @@ const paper = new joint.dia.Paper({
     return parentView.model instanceof joint.shapes.devs.Coupled;
   },
   validateConnection: function (sourceView, sourceMagnet, targetView, targetMagnet) {
-    return sourceMagnet != targetMagnet;
+    return sourceMagnet !== targetMagnet;
   }
 });
 

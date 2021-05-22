@@ -12,13 +12,10 @@ export interface RemoteSelectionOptions extends ViewOptions<any> {
 
 export class RemoteSelection extends joint.mvc.View<any> {
 
-  get tagName(): string {return 'div';}
-  get className(): string {return 'remote-selection';}
-
   private _items: RemoteSelectionItem[];
 
   constructor(options: RemoteSelectionOptions) {
-    super(options);
+    super({...options, tagName: 'div', className: 'remote-selection'});
   }
 
   init(): void {

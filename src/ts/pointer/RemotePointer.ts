@@ -1,4 +1,4 @@
-import * as $ from 'jquery';
+import $ from 'jquery';
 import * as joint from "jointjs";
 
 export type StyleCallback = (svgDoc: Document, color: string) => void;
@@ -18,9 +18,6 @@ export interface RemotePointerOptions extends Backbone.ViewOptions<any> {
  */
 export class RemotePointer extends joint.mvc.View<any> {
 
-  get tagName(): string {return 'object';}
-  get className(): string {return 'remote-pointer';}
-
   private _paper: joint.dia.Paper;
   private _scale: any;
 
@@ -31,7 +28,7 @@ export class RemotePointer extends joint.mvc.View<any> {
    *   The options that configure the RemotePointer
    */
   constructor(options: RemotePointerOptions) {
-    super(options);
+    super({...options, tagName: 'object', className: 'remote-pointer'});
   }
 
   public init() {

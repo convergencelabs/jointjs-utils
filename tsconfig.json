@@ -1,13 +1,18 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "ES2020",
+    "outDir": "dist",
     "preserveConstEnums": true,
-    "sourceMap": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "declaration": false,
-    "lib": ["dom", "es6", "es7"],
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "inlineSources": true,
+    "baseUrl": "./src/ts",
+    "lib": ["dom", "es6", "es7"]
   },
   "include": [
     "src/ts/**/*"

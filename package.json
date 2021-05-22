@@ -1,14 +1,15 @@
 {
   "name": "@convergence/jointjs-utils",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "A utility to bind a Convergence Model to a JointJS Graph",
   "keywords": [
     "Convergence",
     "JointJS"
   ],
-  "main": "lib/index.js",
-  "module": "esm/index.js",
-  "types": "types/index.d.ts",
+  "main": "dist/lib/index.js",
+  "module": "dist/module/index.js",
+  "types": "dist/types/index.d.ts",
+  "browser": "dist/umd/convergence-jointjs-utils.js",
   "homepage": "http://convergencelabs.com",
   "bugs": "https://github.com/convergencelabs/jointjs-utils/issues",
   "license": "MIT",
@@ -26,41 +27,35 @@
     "access": "public"
   },
   "scripts": {
-    "dist": "gulp dist",
-    "clean": "gulp clean"
+    "test": "karma start",
+    "build:esm": "tsc --module ES2020 --target ES2020 --outDir dist/module",
+    "build:commonjs": "tsc --module commonjs --target es5 --outDir dist/lib",
+    "build:types": "tsc --declaration true --emitDeclarationOnly true --outDir dist/types && node ./scripts/enhance-types.js",
+    "build:umd": "rollup -c rollup.config.js",
+    "build:assets": "node ./scripts/copy-assets.js",
+    "dist": "npm run build:esm && npm run build:commonjs && npm run build:umd && npm run build:types && npm run build:assets",
+    "clean": "rimraf dist",
+    "prepack": "npm run dist"
   },
+  "files": [
+    "dist",
+    "docs"
+  ],
   "dependencies": {
     "@convergence/color-assigner": "0.3.0",
     "@convergence/convergence": "^1.0.0-rc.7",
     "jointjs": "3.3.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.16",
-    "@babel/core": "7.7.7",
-    "@babel/node": "7.7.7",
-    "@babel/preset-env": "7.7.7",
-    "@babel/preset-typescript": "7.7.7",
-    "@babel/register": "7.7.7",
+    "@rollup/plugin-commonjs": "19.0.0",
+    "@rollup/plugin-node-resolve": "13.0.0",
+    "@rollup/plugin-typescript": "8.2.1",
     "@types/backbone": "1.4.1",
-    "babel-plugin-module-resolver": "4.0.0",
-    "del": "5.1.0",
-    "gulp": "4.0.2",
-    "gulp-babel": "8.0.0",
-    "gulp-bump": "3.1.3",
-    "gulp-header": "2.0.9",
-    "gulp-insert": "0.5.0",
-    "gulp-rename": "2.0.0",
-    "gulp-sourcemaps": "2.6.5",
-    "gulp-typescript": "5.0.0",
-    "gulp-uglify": "3.0.2",
-    "gulp-webpack": "1.5.0",
-    "merge2": "1.3.0",
-    "ts-loader": "6.2.1",
-    "typescript": "3.7.4",
-    "webpack": "4.41.5",
-    "webpack-stream": "5.2.1"
-  },
-  "optionalDependencies": {
-    "fsevents": "2.3.2"
+    "fs-extra": "^10.0.0",
+    "rimraf": "^3.0.2",
+    "rollup": "2.47.0",
+    "rollup-plugin-license": "2.3.0",
+    "rollup-plugin-terser": "7.0.2",
+    "typescript": "4.2.4"
   }
 }
