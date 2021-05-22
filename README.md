@@ -1,9 +1,8 @@
-<div align="center">
-  <img alt="Convergence Logo" height="80" src="https://convergence.io/assets/img/convergence-logo.png" >
-</div>
+<img alt="Convergence Logo" height="80" src="https://convergence.io/assets/img/convergence-logo.png" >
 
 # Convergence JointJS Utils
-[![Build Status](https://travis-ci.org/convergencelabs/jointjs-utils.svg?branch=master)](https://travis-ci.org/convergencelabs/jointjs-utils)
+[![Build Status](https://github.com/convergencelabs/jointjs-utils/actions/workflows/build.yml/badge.svg)](https://github.com/convergencelabs/jointjs-utils/actions/workflows/build.yml)
+
 
 This project contains utilities to that make integrating [JointJS](https://www.jointjs.com/) with [Convergence](https://convergencelabs.com) simple. JointJS is used to render the graph and Convergence is used to keep the data in sync between clients. With these utilities you can easily make a collaborative graph where changes made by one user are instantly seen by other users. This project also provides collaboration awareness features like shared pointers and share selections to help users coordinate their actions. The project contains four main components:
 
