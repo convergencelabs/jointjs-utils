@@ -93,3 +93,7 @@ Convergence.connectAnonymously(DOMAIN_URL)
     console.error("Could not open model");
     throw error;
   });
+
+function reset() {
+  graph.fromJSON(DefaultGraphData);
+}

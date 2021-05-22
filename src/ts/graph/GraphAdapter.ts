@@ -117,7 +117,7 @@ export class GraphAdapter {
     this._graph.fromJSON(DataConverter.modelDataToGraphJson(data));
     this._cellsModel = this._graphObject.elementAt("cells") as RealTimeObject;
 
-    this._graph.getCells().forEach(this._addCellAdapter);
+    this._bindAllCells();
 
     this._graph.on("add", this._onLocalCellAdded);
     this._graph.on("remove", this._onLocalCellRemoved);
@@ -149,14 +149,10 @@ export class GraphAdapter {
     this._cellsModel.off(RealTimeObject.Events.REMOVE, this._onRemoteCellRemoved);
     this._cellsModel.off(RealTimeObject.Events.VALUE, this._onRemoteCellsSet);
 
-    Object.keys(this._cellAdapters).forEach(cellId => {
-      this._cellAdapters[cellId].unbind();
-    });
+    this._unbindAllCells();
 
     this._graphObject.off(RealTimeObject.Events.DETACHED, this._graphDetached);
     this._graphObject.off(RealTimeObject.Events.SET, this._remoteGraphSet);
-
-    this._cellAdapters = {};
 
     this._bound = false;
   }
@@ -196,21 +192,43 @@ export class GraphAdapter {
 
   private _onLocalCellsReset(event: any): void {
     if (!this._remote) {
+      this._unbindAllCells();
+
       const cells: {[key: string]: any} = {};
       event.models.forEach(cell => {
         cells[cell.id] = cell.toJSON();
       });
       this._cellsModel.value(cells);
+
+      this._bindAllCells();
     }
   };
 
   private _onRemoteCellsSet(event: ObjectSetValueEvent): void {
+    this._remote = true;
+    this._unbindAllCells();
+
     const cellsData = event.element.value();
     const cells: any[] = [];
     Object.keys(cellsData).forEach(id => {
       cells.push(cellsData[id]);
     });
     this._graph.resetCells(cells);
+
+    this._bindAllCells();
+    this._remote = false;
+  }
+
+  private _bindAllCells(): void {
+    this._graph.getCells().forEach(this._addCellAdapter);
+  }
+
+  private _unbindAllCells(): void {
+    Object.keys(this._cellAdapters).forEach(cellId => {
+      this._cellAdapters[cellId].unbind();
+    });
+
+    this._cellAdapters = {};
   }
 
   private _graphDetached(): void {
@@ -221,6 +239,7 @@ export class GraphAdapter {
   }
 
   private _remoteGraphSet(_: ObjectSetEvent): void {
+    console.log("graph set")
     this.unbind();
     this.bind();
   }
