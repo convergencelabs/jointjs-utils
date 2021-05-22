@@ -10,7 +10,7 @@
   "module": "dist/module/index.js",
   "types": "dist/types/index.d.ts",
   "browser": "dist/umd/convergence-jointjs-utils.js",
-  "homepage": "http://convergencelabs.com",
+  "homepage": "https://github.com/convergencelabs/jointjs-utils/",
   "bugs": "https://github.com/convergencelabs/jointjs-utils/issues",
   "license": "MIT",
   "author": {
