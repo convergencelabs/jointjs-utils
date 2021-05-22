@@ -1,7 +1,7 @@
 import {RemoteSelectionItem} from "./RemoteSelectionItem";
 import {ElementReference, RealTimeObject} from "@convergence/convergence";
 import * as joint from "jointjs";
-import {ReferenceChangedEvent} from "@convergence/convergence/typings/model/reference/events";
+import {ReferenceSetEvent} from "@convergence/convergence/typings/model/reference/events";
 import ViewOptions = Backbone.ViewOptions;
 
 export interface RemoteSelectionOptions extends ViewOptions<any> {
@@ -49,7 +49,7 @@ export class RemoteSelection extends joint.mvc.View<any> {
     return this;
   }
 
-  private _onSet(event: ReferenceChangedEvent<RealTimeObject[]>) {
+  private _onSet(event: ReferenceSetEvent<RealTimeObject[]>) {
     const src = event.src as ElementReference;
     const values = src.values() as RealTimeObject[];
     this._setCells(values)
